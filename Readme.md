@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
-* Студент: [Вадим Корнилов](https://up.htmlacademy.ru/ecmascript/12/user/1510239).
-* Наставник: `Неизвестно`.
+- Студент: [Вадим Корнилов](https://up.htmlacademy.ru/ecmascript/12/user/1510239).
+- Наставник: [Игорь Тараканов](https://htmlacademy.ru/profile/id487569).
 
 ---
 
