@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // Methods
 const render = (container, template, place) => {
@@ -310,30 +310,30 @@ const createEventItemForEdit = () => {
 };
 
 // Main Elements
-const pageHeaderElement = document.querySelector(".page-header");
-const pageBodyElement = document.querySelector(".page-main");
-const headElement = pageHeaderElement.querySelector(".trip-main");
-render(headElement, createInfoTrip(), "afterbegin");
+const pageHeaderElement = document.querySelector(`.page-header`);
+const pageBodyElement = document.querySelector(`.page-main`);
+const headElement = pageHeaderElement.querySelector(`.trip-main`);
+render(headElement, createInfoTrip(), `afterbegin`);
 
 // Submain Elements
-const controlsElement = pageHeaderElement.querySelector(".trip-controls");
-render(controlsElement, createMenu(), "beforeend");
-render(controlsElement, createFilter(), "beforeend");
+const controlsElement = pageHeaderElement.querySelector(`.trip-controls`);
+render(controlsElement, createMenu(), `beforeend`);
+render(controlsElement, createFilter(), `beforeend`);
 
-const eventsElement = pageBodyElement.querySelector(".trip-events");
-render(eventsElement, createSort(), "beforeend");
-render(eventsElement, createTripTable(), "beforeend");
+const eventsElement = pageBodyElement.querySelector(`.trip-events`);
+render(eventsElement, createSort(), `beforeend`);
+render(eventsElement, createTripTable(), `beforeend`);
 
-const mainTripList = pageBodyElement.querySelector(".trip-days");
-render(mainTripList, createTripElement(), "beforeend");
+const mainTripList = pageBodyElement.querySelector(`.trip-days`);
+render(mainTripList, createTripElement(), `beforeend`);
 
 // List Elements
-const dayElement = pageBodyElement.querySelector(".day");
-const dayListElement = dayElement.querySelector(".trip-events__list");
+const dayElement = pageBodyElement.querySelector(`.day`);
+const dayListElement = dayElement.querySelector(`.trip-events__list`);
 
 const TASK_COUNT = 3;
 for (let i = 0; i < TASK_COUNT; i++) {
-  render(dayListElement, createEventItem(), "beforeend");
+  render(dayListElement, createEventItem(), `beforeend`);
 }
 
-render(dayListElement, createEventItemForEdit(), "beforeend");
+render(dayListElement, createEventItemForEdit(), `beforeend`);
