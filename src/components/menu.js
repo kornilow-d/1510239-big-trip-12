@@ -1,4 +1,4 @@
-import {menuValues} from `../data`
+import {menuValues} from '../data';
 
 export const getMenuTemplate = () => `<nav class="trip-controls__trip-tabs  trip-tabs">
 ${menuValues.map((item) => `

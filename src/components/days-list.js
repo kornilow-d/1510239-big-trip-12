@@ -1,4 +1,4 @@
-import {getCardTemplate} from './card'
+import {getCardTemplate} from './card';
 
 export const getDaysListTemplate = (events, dates, transfer, activity, cities, options) =>
   `<ul class="trip-days">

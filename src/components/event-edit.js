@@ -100,4 +100,4 @@ export const getEditEventTemplate = ({type, start, end, price, offers, urls}, ty
               </section>
             </section>
           </form>
-`
+`;

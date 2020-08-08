@@ -1,5 +1,5 @@
-import {getEventTemplate} from `./event`;
-import {getEditEventTemplate} from `./event-edit`;
+import {getEventTemplate} from './event';
+import {getEditEventTemplate} from './event-edit';
 
 export const getCardTemplate = (dayIndex, date, dayEvents, transfer, activity, cities, options) =>
   `<li class="trip-days__item  day">

@@ -1,4 +1,4 @@
-import {filtersNames} from `../data`;
+import {filtersNames} from '../data';
 
 export const getFiltersTemplate = () => `<form class="trip-filters" action="#" method="get">
 ${filtersNames.map((item) => `
