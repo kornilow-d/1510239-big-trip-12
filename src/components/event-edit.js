@@ -4,7 +4,7 @@ export const getEditEventTemplate = ({type, start, end, price, offers, urls}, ty
               <div class="event__type-wrapper">
                 <label class="event__type  event__type-btn" for="event-type-toggle-1">
                   <span class="visually-hidden">Choose event type</span>
-                  <img class="event__type-icon" width="17" height="17" src="img/icons/${type.split(' ')[0].toLowerCase()}.png" alt="Event type icon">
+                  <img class="event__type-icon" width="17" height="17" src="img/icons/${type.split(` `)[0].toLowerCase()}.png" alt="Event type icon">
                 </label>
                 <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -14,8 +14,8 @@ export const getEditEventTemplate = ({type, start, end, price, offers, urls}, ty
 
                     ${typesOfTransfer.map((transfer) => `
                       <div class="event__type-item">
-                        <input id="event-type-${transfer.split(' ')[0].toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${transfer.split(' ')[0].toLowerCase()}">
-                        <label class="event__type-label  event__type-label--${transfer.split(' ')[0].toLowerCase()}" for="event-type-${transfer.split(' ')[0].toLowerCase()}-1">${transfer.split(' ')[0]}</label>
+                        <input id="event-type-${transfer.split(` `)[0].toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${transfer.split(` `)[0].toLowerCase()}">
+                        <label class="event__type-label  event__type-label--${transfer.split(` `)[0].toLowerCase()}" for="event-type-${transfer.split(` `)[0].toLowerCase()}-1">${transfer.split(` `)[0]}</label>
                       </div>
                     `).join(``)}
                     
@@ -26,8 +26,8 @@ export const getEditEventTemplate = ({type, start, end, price, offers, urls}, ty
 
                     ${typesOfActivity.map((activity) => `
                     <div class="event__type-item">
-                      <input id="event-type-${activity.split(' ')[0].toLowerCase()}-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${activity.split(' ')[0].toLowerCase()}">
-                      <label class="event__type-label  event__type-label--${activity.split(' ')[0].toLowerCase()}" for="event-type-${activity.split(' ')[0].toLowerCase()}-1">${activity.split(' ')[0]}</label>
+                      <input id="event-type-${activity.split(` `)[0].toLowerCase()}-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${activity.split(` `)[0].toLowerCase()}">
+                      <label class="event__type-label  event__type-label--${activity.split(` `)[0].toLowerCase()}" for="event-type-${activity.split(` `)[0].toLowerCase()}-1">${activity.split(` `)[0]}</label>
                     </div>
                     `).join(``)}
 

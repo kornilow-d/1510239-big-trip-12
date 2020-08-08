@@ -17,8 +17,8 @@ export const getAddEventTemplate = () => ` <form class="trip-events__item  event
 
         ${TYPES_OF_TRANSFER.map((transport) => `
         <div class="event__type-item">
-          <input id="event-type-${transport.split(' ')[0].toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${transport.split(' ')[0].toLowerCase()}">
-          <label class="event__type-label  event__type-label--${transport.split(' ')[0].toLowerCase()}" for="event-type-taxi-1">${transport.split(' ')[0]}</label>
+          <input id="event-type-${transport.split(` `)[0].toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${transport.split(` `)[0].toLowerCase()}">
+          <label class="event__type-label  event__type-label--${transport.split(` `)[0].toLowerCase()}" for="event-type-taxi-1">${transport.split(` `)[0]}</label>
         </div>
         `).join(``)}
 
@@ -29,8 +29,8 @@ export const getAddEventTemplate = () => ` <form class="trip-events__item  event
 
     ${TYPES_OF_ACTIVITY.map((activity) => `
     <div class="event__type-item">
-      <input id="event-type-${activity.split(' ')[0].toLowerCase()}-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${activity.split(' ')[0].toLowerCase()}">
-      <label class="event__type-label  event__type-label--${activity.split(' ')[0].toLowerCase()}" for="event-type-${activity.split(' ')[0].toLowerCase()}-1">${activity.split(' ')[0]}</label>
+      <input id="event-type-${activity.split(` `)[0].toLowerCase()}-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${activity.split(` `)[0].toLowerCase()}">
+      <label class="event__type-label  event__type-label--${activity.split(` `)[0].toLowerCase()}" for="event-type-${activity.split(` `)[0].toLowerCase()}-1">${activity.split(` `)[0]}</label>
     </div>
     `).join(``)}
 

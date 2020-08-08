@@ -1,12 +1,12 @@
 const DAYS_QUANTITY = 3;
 const EVENT_COUNT = 16;
 
-import {getMenuTemplate} from './components/menu.js';
-import {getFiltersTemplate} from './components/filters.js';
-import {getTripInfoTemplate} from './components/trip-info.js';
-import {getSortTemplate} from './components/sort.js';
-import {getAddEventTemplate} from './components/event-add.js';
-import {getDaysListTemplate} from './components/days-list.js';
+import {getMenuTemplate} from `./components/menu.js`;
+import {getFiltersTemplate} from `./components/filters.js`;
+import {getTripInfoTemplate} from `./components/trip-info.js`;
+import {getSortTemplate} from `./components/sort.js`;
+import {getAddEventTemplate} from `./components/event-add.js`;
+import {getDaysListTemplate} from `./components/days-list.js`;
 
 import {
   getEventsData,
