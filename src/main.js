@@ -30,6 +30,12 @@ const getDatesEnd = () => {
 };
 const tripDaysDates = new Set(getDatesStart().map((date) => `${date}`.slice(4, 10)));
 
+const totalCost = () => {
+  const totalPrice = eventsData.reduce((acc, item) => acc + item.price, 0);
+  const totalOffer = eventsData.reduce((acc, item) => acc + Array.from(item.offers).reduce((all, elem) => all + elem.price, 0), 0);
+  return totalPrice + totalOffer;
+};
+
 const renderComponent = function (element, component, where) {
   element.insertAdjacentHTML(where, component);
 };
@@ -39,7 +45,7 @@ const tripEvents = document.querySelector(`.trip-events`);
 
 renderComponent(tripControls.querySelector(`h2`), getMenuTemplate(), `afterend`);
 renderComponent(tripControls, getFiltersTemplate(), `beforeend`);
-renderComponent(document.querySelector(`.trip-info`), getTripInfoTemplate(getCities(), getDatesStart(), getDatesEnd()), `afterbegin`);
+renderComponent(document.querySelector(`.trip-info`), getTripInfoTemplate(getCities(), getDatesStart(), getDatesEnd(), totalCost()), `afterbegin`);
 renderComponent(tripEvents, getSortTemplate(), `beforeend`);
 renderComponent(tripEvents, getAddEventTemplate(), `beforeend`);
 renderComponent(tripEvents, getDaysListTemplate(eventsData, tripDaysDates, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS), `beforeend`);
