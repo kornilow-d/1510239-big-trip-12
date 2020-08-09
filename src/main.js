@@ -39,7 +39,7 @@ const tripEvents = document.querySelector(`.trip-events`);
 
 renderComponent(tripControls.querySelector(`h2`), getMenuTemplate(), `afterend`);
 renderComponent(tripControls, getFiltersTemplate(), `beforeend`);
-renderComponent(document.querySelector(`.trip-info`), getTripInfoTemplate(), `afterbegin`);
+renderComponent(document.querySelector(`.trip-info`), getTripInfoTemplate(getCities(), getDatesStart(), getDatesEnd()), `afterbegin`);
 renderComponent(tripEvents, getSortTemplate(), `beforeend`);
 renderComponent(tripEvents, getAddEventTemplate(), `beforeend`);
 renderComponent(tripEvents, getDaysListTemplate(eventsData, tripDaysDates, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS), `beforeend`);

@@ -1,3 +1,5 @@
+import {getRandomInteger, getRandomElement, getArrayImg, getRandomArray, getRandomDate} from "./utils.js";
+
 // Data
 export const CITIES = [`London`, `Liverpool`, `Birmingham`, `Oxford`, `Cambridge`, `Manchester`, `Nottingham`, `Sheffield`, `Leeds`, `Bristol`, `Newcastle`];
 export const TYPES_OF_ACTIVITY = [`Check-in`, `Restaurant`, `Sightseeing`];
@@ -20,8 +22,6 @@ export const menuValues = [
 ];
 
 export const filtersNames = [`Everything`, `Future`, `Past`];
-
-import {getRandomInteger, getRandomElement, getArrayImg, getRandomArray, getRandomDate} from "./utils.js";
 
 // Модель данных Event-а
 const getEvent = () => {

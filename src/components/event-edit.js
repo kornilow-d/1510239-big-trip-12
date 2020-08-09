@@ -1,4 +1,4 @@
-export const getEditEventTemplate = ({type, start, end, price, offers, urls}, typesOfTransfer, typesOfActivity, cities, options) => `
+export const getEditEventTemplate = ({type, start, end, price, offers, urls, city}, typesOfTransfer, typesOfActivity, cities, options) => `
 <form class="trip-events__item  event  event--edit" action="#" method="post">
             <header class="event__header">
               <div class="event__type-wrapper">
@@ -39,7 +39,7 @@ export const getEditEventTemplate = ({type, start, end, price, offers, urls}, ty
     <label class="event__label  event__type-output" for="event-destination-1">
     ${type}
     </label>
-    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Geneva" list="destination-list-1">
+    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
       <datalist id="destination-list-1">
         ${cities.map((city) => `<option value="${city}"></option>`)}
       </datalist>

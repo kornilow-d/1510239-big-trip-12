@@ -18,8 +18,8 @@ export const getArrayImg = (min, max) => {
   for (let i = 0; i < newArrayLenght; i++) {
     newArray.push(`http://picsum.photos/300/150?r=${Math.random()}`);
   }
-  return newArray
-}
+  return newArray;
+};
 
 // Массив случайных элементов из набора
 export const getRandomArray = (min, max, array) => {
