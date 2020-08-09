@@ -41,7 +41,7 @@ export const getEditEventTemplate = ({type, start, end, price, offers, urls, cit
     </label>
     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
       <datalist id="destination-list-1">
-        ${cities.map((city) => `<option value="${city}"></option>`)}
+        ${cities.map((item) => `<option value="${item}"></option>`)}
       </datalist>
     </div>
 
