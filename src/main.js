@@ -1,26 +1,51 @@
-const DAYS_QUANTITY = 3;
+const EVENT_COUNT = 16;
+
 import {getMenuTemplate} from './components/menu.js';
 import {getFiltersTemplate} from './components/filters.js';
 import {getTripInfoTemplate} from './components/trip-info.js';
 import {getSortTemplate} from './components/sort.js';
-import {getFormTemplate} from './components/form.js';
+import {getAddEventTemplate} from './components/event-add.js';
 import {getDaysListTemplate} from './components/days-list.js';
-import {getCardTemplate} from './components/card.js';
+
+import {
+  getEventsData,
+  TYPES_OF_TRANSFER,
+  TYPES_OF_ACTIVITY,
+  CITIES,
+  OPTIONS,
+} from "./data.js";
+
+const eventsData = getEventsData(EVENT_COUNT);
+
+const getCities = () => {
+  return eventsData.map((event) => event.city);
+};
+// массив с датами начала события
+const getDatesStart = () => {
+  return eventsData.map((event) => new Date(event.start));
+};
+// массив с датами окончания события
+const getDatesEnd = () => {
+  return eventsData.map((event) => new Date(event.end));
+};
+const tripDaysDates = new Set(getDatesStart().map((date) => `${date}`.slice(4, 10)));
+
+const totalCost = () => {
+  const totalPrice = eventsData.reduce((acc, item) => acc + item.price, 0);
+  const totalOffer = eventsData.reduce((acc, item) => acc + Array.from(item.offers).reduce((all, elem) => all + elem.price, 0), 0);
+  return totalPrice + totalOffer;
+};
 
 const renderComponent = function (element, component, where) {
   element.insertAdjacentHTML(where, component);
 };
+
 const tripControls = document.querySelector(`.trip-controls`);
 const tripEvents = document.querySelector(`.trip-events`);
 
 renderComponent(tripControls.querySelector(`h2`), getMenuTemplate(), `afterend`);
 renderComponent(tripControls, getFiltersTemplate(), `beforeend`);
-renderComponent(document.querySelector(`.trip-info`), getTripInfoTemplate(), `afterbegin`);
+renderComponent(document.querySelector(`.trip-info`), getTripInfoTemplate(getCities(), getDatesStart(), getDatesEnd(), totalCost()), `afterbegin`);
 renderComponent(tripEvents, getSortTemplate(), `beforeend`);
-renderComponent(tripEvents, getFormTemplate(), `beforeend`);
-renderComponent(tripEvents, getDaysListTemplate(), `beforeend`);
-
-const daysList = tripEvents.querySelector(`.trip-days`);
-for (let i = 0; i < DAYS_QUANTITY; i++) {
-  renderComponent(daysList, getCardTemplate(), `beforeend`);
-}
+renderComponent(tripEvents, getAddEventTemplate(), `beforeend`);
+renderComponent(tripEvents, getDaysListTemplate(eventsData, tripDaysDates, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS), `beforeend`);
