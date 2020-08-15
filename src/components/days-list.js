@@ -24,9 +24,7 @@ export default class Day {
     if (!this._element) {
       this._element = createElement(this._getTemplate());
     }
-    // --- Логика ---
     this._createEvents().forEach(item => this._element.appendChild(item));
-    // ---
     return this._element;
   }
 

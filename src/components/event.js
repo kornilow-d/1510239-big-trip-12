@@ -59,9 +59,7 @@ export default class Event {
       this._element = createElement(this._getTemplate());
       this._editElement = new EditEvent(this._event, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS).getElement();
     }
-    // 
     this._addEvent(this._element, this._element.querySelector(`.event`), this._editElement);
-    // 
     return this._element;
   }
 

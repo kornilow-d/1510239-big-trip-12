@@ -1,5 +1,4 @@
 import Event from './event';
-import EditEvent from './event-edit';
 
 import {createElement} from '../utils';
 
@@ -32,15 +31,13 @@ export default class List {
     if (!this._element) {
       this._element = createElement(this._getTemplate());
     }
-    // 
-    const list = this._element.querySelector('.trip-events__list');
+    const list = this._element.querySelector(`.trip-events__list`);
     this._createDayList().forEach(item => list.appendChild(item));
-    // 
     return this._element;
   }
 
   _createDayList() {
-    return this._events.map((event, index) => {
+    return this._events.map((event) => {
       return new Event(event).getElement();
     });
   }
