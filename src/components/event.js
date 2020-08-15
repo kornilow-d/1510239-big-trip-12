@@ -1,5 +1,6 @@
-export const getEventTemplate = ({type, city, start, end, hours, minutes, price, offers}) => `
-  <li class="trip-events__item">
+import {createElement} from "../utils";
+
+const getEventTemplate = ({type, city, start, end, hours, minutes, price, offers}) => `<li class="trip-events__item">
     <div class="event">
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type.split(` `)[0].toLowerCase()}.png" alt="Event type icon">
@@ -32,5 +33,26 @@ export const getEventTemplate = ({type, city, start, end, hours, minutes, price,
     <span class="visually-hidden">Open event</span>
   </button>
     </div >
-  </li >
-  `;
+  </li >`;
+
+export default class Event {
+  constructor(event) {
+    this._event = event;
+    this._element = null;
+  }
+
+  _getTemplate() {
+    return getEventTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

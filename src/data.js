@@ -16,12 +16,16 @@ export const OPTIONS = [
   {id: `seats`, option: `Choose seats`, price: 9},
 ];
 
-export const menuValues = [
+export const menuProps = [
   {title: `Table`, active: true},
   {title: `Stats`, active: false},
 ];
 
-export const filtersNames = [`Everything`, `Future`, `Past`];
+export const filtersProps = [
+  {title: `Everything`, active: true},
+  {title: `Future`, active: false},
+  {title: `Past`, active: false}
+];
 
 // Модель данных Event-а
 const getEvent = () => {
