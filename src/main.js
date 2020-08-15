@@ -1,4 +1,4 @@
-const EVENT_COUNT = 16;
+const EVENT_COUNT = 0;
 
 import MenuView from './components/menu';
 import FiltersView from './components/filters';

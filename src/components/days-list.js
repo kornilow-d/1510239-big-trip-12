@@ -1,4 +1,5 @@
 import List from './card';
+import NoPoint from './no-point';
 import {createElement} from '../utils';
 
 const getDaysListTemplate = () => {
@@ -24,7 +25,13 @@ export default class Day {
     if (!this._element) {
       this._element = createElement(this._getTemplate());
     }
-    this._createEvents().forEach((item) => this._element.appendChild(item));
+
+    if (this._events.length === 0) {
+      this._element.appendChild(new NoPoint().getElement());
+    } else {
+      this._createEvents().forEach((item) => this._element.appendChild(item));
+    }
+
     return this._element;
   }
 
