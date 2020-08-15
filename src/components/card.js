@@ -32,7 +32,7 @@ export default class List {
       this._element = createElement(this._getTemplate());
     }
     const list = this._element.querySelector(`.trip-events__list`);
-    this._createDayList().forEach(item => list.appendChild(item));
+    this._createDayList().forEach((item) => list.appendChild(item));
     return this._element;
   }
 
