@@ -67,6 +67,15 @@ export const getRandomDate = (days) => {
   return Date.now() + (getRandomInteger(0, (days * 24))) * TIME_IN_MS / 24;
 };
 
+export const replaceCardToForm = (list, card, form) => {
+  console.log(list);
+  list.replaceChild(form, card);
+};
+
+export const replaceFormToCard = (list, card, form) => {
+  list.replaceChild(card, form);
+};
+
 // let a = [1, 2, 3, 4, 5, 6, 7];
 // a.sort((a, b) => 0.5 - Math.random());
 // console.log(a);

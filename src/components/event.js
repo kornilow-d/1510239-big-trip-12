@@ -1,4 +1,13 @@
-import {createElement} from "../utils";
+import {createElement, replaceCardToForm, replaceFormToCard, onEscKeyDown} from '../utils';
+
+import EditEvent from "../components/event-edit";
+
+import {
+  TYPES_OF_TRANSFER,
+  TYPES_OF_ACTIVITY,
+  CITIES,
+  OPTIONS,
+} from "../data";
 
 const getEventTemplate = ({type, city, start, end, hours, minutes, price, offers}) => `<li class="trip-events__item">
     <div class="event">
@@ -48,8 +57,33 @@ export default class Event {
   getElement() {
     if (!this._element) {
       this._element = createElement(this._getTemplate());
+      this._editElement = new EditEvent(this._event, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS).getElement();
     }
+    // 
+    this._addEvent(this._element, this._element.querySelector(`.event`), this._editElement);
+    // 
     return this._element;
+  }
+
+  _addEvent(list, card, form) {
+    this._element.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+      replaceCardToForm(list, card, form);
+      document.addEventListener(`keydown`, onEscKeyDown);
+    });
+
+    this._editElement.addEventListener(`submit`, (evt) => {
+      evt.preventDefault();
+      replaceFormToCard(list, card, form);
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    });
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === `Escape` || evt.key === `Esc`) {
+        evt.preventDefault();
+        replaceFormToCard(list, card, form);
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      }
+    };
   }
 
   removeElement() {

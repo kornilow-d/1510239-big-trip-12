@@ -4,13 +4,14 @@ import MenuView from './components/menu';
 import FiltersView from './components/filters';
 import TripHeaderInfoView from './components/trip-info';
 import SortView from './components/sort';
-import {getAddEventTemplate} from './components/event-add';
 import DayView from './components/days-list';
+// import {getAddEventTemplate} from './components/event-add';
 
-import {menuProps, filtersProps} from './data';
 import {render, RenderPosition} from './utils';
 
 import {
+  menuProps,
+  filtersProps,
   getEventsData,
   TYPES_OF_TRANSFER,
   TYPES_OF_ACTIVITY,
