@@ -1,4 +1,4 @@
-import {createElement, replaceCardToForm, replaceFormToCard, onEscKeyDown} from '../utils';
+import {createElement, replaceItem} from '../utils';
 
 import EditEvent from "../components/event-edit";
 
@@ -67,20 +67,20 @@ export default class Event {
 
   _addEvent(list, card, form) {
     this._element.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
-      replaceCardToForm(list, card, form);
+      replaceItem(list, form, card);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
     this._editElement.addEventListener(`submit`, (evt) => {
       evt.preventDefault();
-      replaceFormToCard(list, card, form);
+      replaceItem(list, card, form);
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
         evt.preventDefault();
-        replaceFormToCard(list, card, form);
+        replaceItem(list, card, form);
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
