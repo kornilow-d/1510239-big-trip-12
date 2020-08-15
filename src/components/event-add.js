@@ -1,6 +1,4 @@
-import {TYPES_OF_TRANSFER} from "../data.js";
-import {TYPES_OF_ACTIVITY} from "../data.js";
-import {CITIES} from "../data.js";
+import {TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES} from "../data.js";
 
 export const getAddEventTemplate = () => ` <form class="trip-events__item  event  event--edit" action="#" method="post">
 <header class="event__header">

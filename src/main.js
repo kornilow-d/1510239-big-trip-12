@@ -1,13 +1,17 @@
 const EVENT_COUNT = 16;
 
-import {getMenuTemplate} from './components/menu.js';
-import {getFiltersTemplate} from './components/filters.js';
-import {getTripInfoTemplate} from './components/trip-info.js';
-import {getSortTemplate} from './components/sort.js';
-import {getAddEventTemplate} from './components/event-add.js';
-import {getDaysListTemplate} from './components/days-list.js';
+import MenuView from './components/menu';
+import FiltersView from './components/filters';
+import TripHeaderInfoView from './components/trip-info';
+import SortView from './components/sort';
+import DayView from './components/days-list';
+// import {getAddEventTemplate} from './components/event-add';
+
+import {render, RenderPosition} from './utils';
 
 import {
+  menuProps,
+  filtersProps,
   getEventsData,
   TYPES_OF_TRANSFER,
   TYPES_OF_ACTIVITY,
@@ -20,11 +24,11 @@ const eventsData = getEventsData(EVENT_COUNT);
 const getCities = () => {
   return eventsData.map((event) => event.city);
 };
-// массив с датами начала события
+
 const getDatesStart = () => {
   return eventsData.map((event) => new Date(event.start));
 };
-// массив с датами окончания события
+
 const getDatesEnd = () => {
   return eventsData.map((event) => new Date(event.end));
 };
@@ -36,16 +40,13 @@ const totalCost = () => {
   return totalPrice + totalOffer;
 };
 
-const renderComponent = function (element, component, where) {
-  element.insertAdjacentHTML(where, component);
-};
-
 const tripControls = document.querySelector(`.trip-controls`);
 const tripEvents = document.querySelector(`.trip-events`);
 
-renderComponent(tripControls.querySelector(`h2`), getMenuTemplate(), `afterend`);
-renderComponent(tripControls, getFiltersTemplate(), `beforeend`);
-renderComponent(document.querySelector(`.trip-info`), getTripInfoTemplate(getCities(), getDatesStart(), getDatesEnd(), totalCost()), `afterbegin`);
-renderComponent(tripEvents, getSortTemplate(), `beforeend`);
-renderComponent(tripEvents, getAddEventTemplate(), `beforeend`);
-renderComponent(tripEvents, getDaysListTemplate(eventsData, tripDaysDates, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS), `beforeend`);
+render(tripControls, new MenuView(menuProps).getElement(), RenderPosition.AFTERBEGIN);
+render(tripControls, new FiltersView(filtersProps).getElement(), RenderPosition.BEFOREEND);
+
+render(document.querySelector(`.trip-main`), new TripHeaderInfoView(getCities(), getDatesStart(), getDatesEnd(), totalCost()).getElement(), RenderPosition.AFTERBEGIN);
+
+render(tripEvents, new SortView().getElement(), RenderPosition.BEFOREEND);
+render(tripEvents, new DayView(eventsData, tripDaysDates, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS).getElement(), RenderPosition.BEFOREEND);
