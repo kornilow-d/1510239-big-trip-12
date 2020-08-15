@@ -77,6 +77,11 @@ export default class Event {
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
+    this._editElement.querySelector(`.event__reset-btn`).addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      replaceItem(list, card, form);
+    });
+
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
         evt.preventDefault();

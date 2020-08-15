@@ -50,12 +50,12 @@ const getEditEventTemplate = ({type, start, end, price, offers, urls, city}, typ
     <label class="visually-hidden" for="event-start-time-1">
       From
               </label>
-    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${new Date(start).toString().slice(4, 21)}">
+    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${new Date(start).toTimeString().slice(0, 5)}">
       &mdash;
               <label class="visually-hidden" for="event-end-time-1">
         To
               </label>
-      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${new Date(end).toString().slice(4, 21)}">
+      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${new Date(end).toTimeString().slice(0, 5)}">
             </div>
 
       <div class="event__field-group  event__field-group--price">
