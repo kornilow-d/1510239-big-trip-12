@@ -52,15 +52,12 @@ export default class Trip {
   _sortEvents(type) {
     switch (type) {
       case sortType.TIME:
-        console.log(1);
         this._eventsData.sort(sortCardTime);
         break;
       case sortType.PRICE:
-        console.log(2);
         this._eventsData.sort(sortCardPrice);
         break;
       default:
-        console.log(3);
         this._eventsData = this._sourcedTripEvents.slice();
     }
     this._currentSortType = type;
@@ -71,7 +68,6 @@ export default class Trip {
   }
 
   _renderEvents() {
-    console.log(`Render`, this._eventsData);
     render(this._boardContainer, this._trevelComponent.getElement(), RenderPosition.BEFOREEND);
   }
 }
