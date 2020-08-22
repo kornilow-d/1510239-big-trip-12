@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractComponent from '../abstract-component';
 
 const getEditEventTemplate = ({type, start, end, price, offers, urls, city}, typesOfTransfer, typesOfActivity, cities, options) => `<form class="trip-events__item  event  event--edit" action="#" method="post">
           <header class="event__header">
@@ -102,28 +102,40 @@ const getEditEventTemplate = ({type, start, end, price, offers, urls, city}, typ
           </section>
         </form>`;
 
-export default class EditEvent {
+export default class EditEvent extends AbstractComponent {
   constructor(event, transfer, activity, cities, options) {
+    super();
     this._event = event;
     this._transfer = transfer;
     this._activity = activity;
     this._cities = cities;
     this._options = options;
-    this._element = null;
+
+    this._submitFormHandler = this._submitFormHandler.bind(this);
+    this._resetFormHandler = this._resetFormHandler.bind(this);
   }
 
   _getTemplate() {
     return getEditEventTemplate(this._event, this._transfer, this._activity, this._cities, this._options);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-    return this._element;
+  setSubmitFormHandler(callback) {
+    this._callback.submitForm = callback;
+    this.getElement().addEventListener(`submit`, this._submitFormHandler);
   }
 
-  removeElement() {
-    this._element = null;
+  _submitFormHandler(evt) {
+    evt.preventDefault();
+    this._callback.submitForm();
+  }
+
+  setResetFormHandler(callback) {
+    this._callback.resetForm = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._resetFormHandler);
+  }
+
+  _resetFormHandler(evt) {
+    evt.preventDefault();
+    this._callback.resetForm();
   }
 }

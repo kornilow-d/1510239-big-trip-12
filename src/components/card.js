@@ -1,6 +1,6 @@
-import Event from './event';
+import AbstractComponent from '../abstract-component';
 
-import {createElement} from '../utils';
+import Event from './event';
 
 const getCardTemplate = (dayIndex, date) => `<li class="trip-days__item day">
     <div class="day__info">
@@ -11,8 +11,9 @@ const getCardTemplate = (dayIndex, date) => `<li class="trip-days__item day">
     <ul class="trip-events__list"></ul>
   </li>`;
 
-export default class List {
+export default class List extends AbstractComponent {
   constructor(index, date, events, transfer, activity, city, option) {
+    super();
     this._index = index;
     this._date = date;
     this._events = events;
@@ -20,29 +21,20 @@ export default class List {
     this._activity = activity;
     this._city = city;
     this._option = option;
-    this._element = null;
   }
 
   _getTemplate() {
     return getCardTemplate(this._index, this._date);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
+  _setUpChildComponents() {
     const list = this._element.querySelector(`.trip-events__list`);
     this._createDayList().forEach((item) => list.appendChild(item));
-    return this._element;
   }
 
   _createDayList() {
     return this._events.map((event) => {
       return new Event(event).getElement();
     });
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

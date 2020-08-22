@@ -1,38 +1,33 @@
+import AbstractComponent from '../abstract-component';
+
 import List from './card';
 import NoPoint from './no-point';
-import {createElement} from '../utils';
 
 const getDaysListTemplate = () => {
   return `<ul class="trip-days"></ul>`;
 };
 
-export default class Day {
+export default class Day extends AbstractComponent {
   constructor(events, dates, transfer, activity, cities, options) {
+    super();
     this._events = events;
     this._dates = dates;
     this._transfer = transfer;
     this._activity = activity;
     this._cities = cities;
     this._options = options;
-    this._element = null;
   }
 
   _getTemplate() {
     return getDaysListTemplate(this._events, this._dates, this._transfer, this._activity, this._cities, this._options);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
+  _setUpChildComponents() {
     if (this._events.length === 0) {
       this._element.appendChild(new NoPoint().getElement());
     } else {
       this._createEvents().forEach((item) => this._element.appendChild(item));
     }
-
-    return this._element;
   }
 
   _createEvents() {
@@ -43,9 +38,5 @@ export default class Day {
       });
       return new List(index, date, dayEvents, this._transfer, this._activity, this._cities, this._options).getElement();
     });
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractComponent from '../abstract-component';
 
 const getMenuTemplate = (value) => `<nav class="trip-controls__trip-tabs  trip-tabs">
   ${value.map((item) => `
@@ -6,24 +6,13 @@ const getMenuTemplate = (value) => `<nav class="trip-controls__trip-tabs  trip-t
   `).join(``)}
 </nav>`;
 
-export default class Menu {
+export default class Menu extends AbstractComponent {
   constructor(value) {
+    super();
     this._value = value;
-    this._element = null;
   }
 
   _getTemplate() {
     return getMenuTemplate(this._value);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

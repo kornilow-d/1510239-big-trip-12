@@ -1,6 +1,8 @@
-import {createElement, replaceItem} from '../utils';
+import AbstractComponent from '../abstract-component';
 
 import EditEvent from "../components/event-edit";
+
+import {replaceItem} from '../utils/render';
 
 import {
   TYPES_OF_TRANSFER,
@@ -44,39 +46,35 @@ const getEventTemplate = ({type, city, start, end, hours, minutes, price, offers
     </div >
   </li >`;
 
-export default class Event {
+export default class Event extends AbstractComponent {
   constructor(event) {
+    super();
     this._event = event;
-    this._element = null;
+    this._editElement = new EditEvent(this._event, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS);
+
+    this._addEvent = this._addEvent.bind(this);
+    this._rollupFormHadler = this._rollupFormHadler.bind(this);
   }
 
   _getTemplate() {
     return getEventTemplate(this._event);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-      this._editElement = new EditEvent(this._event, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS).getElement();
-    }
-    this._addEvent(this._element, this._element.querySelector(`.event`), this._editElement);
-    return this._element;
+  _setUpChildComponents() {
+    this._addEvent(this._element, this._element.querySelector(`.event`), this._editElement.getElement());
   }
 
   _addEvent(list, card, form) {
-    this._element.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+    this._setRollupFormHandler(() => {
       replaceItem(list, form, card);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
-    this._editElement.addEventListener(`submit`, (evt) => {
-      evt.preventDefault();
+    this._editElement.setSubmitFormHandler(() => {
       replaceItem(list, card, form);
-      document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
-    this._editElement.querySelector(`.event__reset-btn`).addEventListener(`click`, (evt) => {
-      evt.preventDefault();
+    this._editElement.setResetFormHandler(() => {
       replaceItem(list, card, form);
     });
 
@@ -89,7 +87,14 @@ export default class Event {
     };
   }
 
-  removeElement() {
-    this._element = null;
+  // Handler
+  _setRollupFormHandler(callback) {
+    this._callback.rollupForm = callback;
+    this._element.querySelector(`.event__rollup-btn`).addEventListener(`click`, this._rollupFormHadler);
+  }
+
+  _rollupFormHadler(evt) {
+    evt.preventDefault();
+    this._callback.rollupForm();
   }
 }
