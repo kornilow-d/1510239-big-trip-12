@@ -37,3 +37,20 @@ export const renderTemplate = (container, template, place) => {
 export const replaceItem = (list, firstItem, secondItem) => {
   list.replaceChild(firstItem, secondItem);
 };
+
+export const remove = (component) => {
+  if (!(component instanceof AbstractComponent)) {
+    throw new Error(`Can remove only components`);
+  }
+
+  component.getElement().remove();
+  component.removeElement();
+};
+
+export const sortCardTime = (cardA, cardB) => {
+  return cardA.start - cardB.start;
+};
+
+export const sortCardPrice = (cardA, cardB) => {
+  return cardA.price - cardB.price;
+};
