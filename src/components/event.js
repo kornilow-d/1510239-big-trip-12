@@ -2,7 +2,7 @@ import Abstract from '../abstract';
 
 import EditEvent from "../components/event-edit";
 
-import {replaceItem} from '../utils';
+import {replaceItem} from '../utils/render';
 
 import {
   TYPES_OF_TRANSFER,

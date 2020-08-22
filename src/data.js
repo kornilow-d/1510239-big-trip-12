@@ -1,4 +1,6 @@
-import {getRandomInteger, getRandomElement, getArrayImg, getRandomArray, getRandomDate} from "./utils.js";
+import {getRandomInteger, getRandomElement, getArrayImg, getRandomArray, getRandomDate} from "./utils/utils";
+
+const EVENT_COUNT = 16;
 
 // Data
 export const CITIES = [`London`, `Liverpool`, `Birmingham`, `Oxford`, `Cambridge`, `Manchester`, `Nottingham`, `Sheffield`, `Leeds`, `Bristol`, `Newcastle`];
@@ -48,8 +50,43 @@ const getEvent = () => {
   };
 };
 
-// Массив с данными
-export const getEventsData = (count) => {
+
+// Получаем массив евентов
+const getEventsData = (count) => {
   const events = new Array(count);
   return events.fill(``).map(getEvent).sort((a, b) => a.start - b.start);
+};
+
+// Получаем список городов
+const getCities = () => {
+  return eventsData.map((event) => event.city);
+};
+
+// Получаем первый город
+const getDatesStart = () => {
+  return eventsData.map((event) => new Date(event.start));
+};
+
+// Получаем последний город
+const getDatesEnd = () => {
+  return eventsData.map((event) => new Date(event.end));
+};
+
+// Получаем полную стоимость поездки
+const totalCost = () => {
+  const totalPrice = eventsData.reduce((acc, item) => acc + item.price, 0);
+  const totalOffer = eventsData.reduce((acc, item) => acc + Array.from(item.offers).reduce((all, elem) => all + elem.price, 0), 0);
+  return totalPrice + totalOffer;
+};
+
+export const eventsData = getEventsData(EVENT_COUNT);
+export const tripDaysDates = new Set(getDatesStart().map((date) => `${date}`.slice(4, 10)));
+
+export const headerProps = () => {
+  return {
+    cities: getCities(),
+    startDate: getDatesStart(),
+    endDate: getDatesEnd(),
+    totalCost: totalCost()
+  };
 };

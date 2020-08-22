@@ -1,4 +1,3 @@
-import {createElement} from '../utils';
 import Abstract from '../abstract';
 
 const noPointTemplate = () => {
