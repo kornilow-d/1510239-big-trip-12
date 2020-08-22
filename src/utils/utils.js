@@ -1,5 +1,3 @@
-import AbstractView from '../abstract';
-
 const TIME_IN_MS = 60 * 60 * 24 * 1000;
 
 export const getRandomInteger = (min, max) => {

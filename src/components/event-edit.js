@@ -119,7 +119,6 @@ export default class EditEvent extends Abstract {
     return getEditEventTemplate(this._event, this._transfer, this._activity, this._cities, this._options);
   }
 
-  // Handlers
   setSubmitFormHandler(callback) {
     this._callback.submitForm = callback;
     this.getElement().addEventListener(`submit`, this._submitFormHandler);
@@ -130,7 +129,6 @@ export default class EditEvent extends Abstract {
     this._callback.submitForm();
   }
 
-  // 
   setResetFormHandler(callback) {
     this._callback.resetForm = callback;
     this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._resetFormHandler);
