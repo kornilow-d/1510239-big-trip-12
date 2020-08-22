@@ -50,34 +50,31 @@ export default class Event extends Abstract {
   constructor(event) {
     super();
     this._event = event;
+    this._editElement = new EditEvent(this._event, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS);
   }
 
   _getTemplate() {
-    this._editElement = new EditEvent(this._event, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS).getElement();
     return getEventTemplate(this._event);
   }
 
   _setUpChildComponents() {
-    this._addEvent(this._element, this._element.querySelector(`.event`), this._editElement);
+    this._addEvent(this._element, this._element.querySelector(`.event`), this._editElement.getElement());
   }
 
   _addEvent(list, card, form) {
     this._element.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
-      console.log(list, form, card);
       replaceItem(list, form, card);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
-    this._editElement.addEventListener(`submit`, (evt) => {
-      evt.preventDefault();
+    this._editElement.setChangeFormHandler(() => {
       replaceItem(list, card, form);
-      document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
-    this._editElement.querySelector(`.event__reset-btn`).addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      replaceItem(list, card, form);
-    });
+    // this._editElement.querySelector(`.event__reset-btn`).addEventListener(`click`, (evt) => {
+    //   evt.preventDefault();
+    //   replaceItem(list, card, form);
+    // });
 
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {

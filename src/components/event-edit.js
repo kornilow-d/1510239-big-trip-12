@@ -115,4 +115,15 @@ export default class EditEvent extends Abstract {
   _getTemplate() {
     return getEditEventTemplate(this._event, this._transfer, this._activity, this._cities, this._options);
   }
+
+  // Handlers
+  _changeFormHandler(evt) {
+    evt.preventDefault();
+    this._callback.changeForm();
+  }
+
+  setChangeFormHandler(callback) {
+    this._callback.changeForm = callback;
+    this.getElement().addEventListener(`click`, this._changeFormHandler);
+  }
 }
