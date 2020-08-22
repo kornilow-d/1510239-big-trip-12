@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import Abstract from "../abstract";
 
 const getTripInfoTemplate = (city, startDay, endDay, total) => `<section class="trip-main__trip-info trip-info">
   <div class="trip-info__main">
@@ -10,27 +10,16 @@ const getTripInfoTemplate = (city, startDay, endDay, total) => `<section class="
   </p>
 </section>`;
 
-export default class TripHeaderInfo {
+export default class TripHeaderInfo extends Abstract {
   constructor(city, startDay, endDay, total) {
+    super();
     this._city = city;
     this._startDay = startDay;
     this._endDay = endDay;
     this._total = total;
-    this._element = null;
   }
 
   _getTemplate() {
     return getTripInfoTemplate(this._city, this._startDay, this._endDay, this._total);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,6 +1,8 @@
-import {createElement, replaceItem} from '../utils';
+import Abstract from '../abstract';
 
 import EditEvent from "../components/event-edit";
+
+import {replaceItem} from '../utils';
 
 import {
   TYPES_OF_TRANSFER,
@@ -44,27 +46,24 @@ const getEventTemplate = ({type, city, start, end, hours, minutes, price, offers
     </div >
   </li >`;
 
-export default class Event {
+export default class Event extends Abstract {
   constructor(event) {
+    super();
     this._event = event;
-    this._element = null;
   }
 
   _getTemplate() {
+    this._editElement = new EditEvent(this._event, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS).getElement();
     return getEventTemplate(this._event);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-      this._editElement = new EditEvent(this._event, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS).getElement();
-    }
+  _setUpChildComponents() {
     this._addEvent(this._element, this._element.querySelector(`.event`), this._editElement);
-    return this._element;
   }
 
   _addEvent(list, card, form) {
     this._element.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+      console.log(list, form, card);
       replaceItem(list, form, card);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
@@ -87,9 +86,5 @@ export default class Event {
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
