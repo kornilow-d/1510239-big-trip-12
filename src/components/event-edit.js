@@ -110,6 +110,9 @@ export default class EditEvent extends Abstract {
     this._activity = activity;
     this._cities = cities;
     this._options = options;
+
+    this._submitFormHandler = this._submitFormHandler.bind(this);
+    this._resetFormHandler = this._resetFormHandler.bind(this);
   }
 
   _getTemplate() {
@@ -117,13 +120,24 @@ export default class EditEvent extends Abstract {
   }
 
   // Handlers
-  _changeFormHandler(evt) {
-    evt.preventDefault();
-    this._callback.changeForm();
+  setSubmitFormHandler(callback) {
+    this._callback.submitForm = callback;
+    this.getElement().addEventListener(`submit`, this._submitFormHandler);
   }
 
-  setChangeFormHandler(callback) {
-    this._callback.changeForm = callback;
-    this.getElement().addEventListener(`click`, this._changeFormHandler);
+  _submitFormHandler(evt) {
+    evt.preventDefault();
+    this._callback.submitForm();
+  }
+
+  // 
+  setResetFormHandler(callback) {
+    this._callback.resetForm = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._resetFormHandler);
+  }
+
+  _resetFormHandler(evt) {
+    evt.preventDefault();
+    this._callback.resetForm();
   }
 }

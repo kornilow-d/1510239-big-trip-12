@@ -51,6 +51,9 @@ export default class Event extends Abstract {
     super();
     this._event = event;
     this._editElement = new EditEvent(this._event, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS);
+
+    this._addEvent = this._addEvent.bind(this);
+    this._rollupFormHadler = this._rollupFormHadler.bind(this);
   }
 
   _getTemplate() {
@@ -62,19 +65,18 @@ export default class Event extends Abstract {
   }
 
   _addEvent(list, card, form) {
-    this._element.querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+    this._setRollupFormHandler(() => {
       replaceItem(list, form, card);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
-    this._editElement.setChangeFormHandler(() => {
+    this._editElement.setSubmitFormHandler(() => {
       replaceItem(list, card, form);
     });
 
-    // this._editElement.querySelector(`.event__reset-btn`).addEventListener(`click`, (evt) => {
-    //   evt.preventDefault();
-    //   replaceItem(list, card, form);
-    // });
+    this._editElement.setResetFormHandler(() => {
+      replaceItem(list, card, form);
+    });
 
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
@@ -83,5 +85,16 @@ export default class Event extends Abstract {
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
+  }
+
+  // Handler
+  _setRollupFormHandler(callback) {
+    this._callback.rollupForm = callback;
+    this._element.querySelector(`.event__rollup-btn`).addEventListener(`click`, this._rollupFormHadler);
+  }
+
+  _rollupFormHadler(evt) {
+    evt.preventDefault();
+    this._callback.rollupForm();
   }
 }
