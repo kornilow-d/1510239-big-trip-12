@@ -1,4 +1,4 @@
-import Abstract from '../abstract';
+import AbstractComponent from '../abstract-component';
 
 import Event from './event';
 
@@ -11,7 +11,7 @@ const getCardTemplate = (dayIndex, date) => `<li class="trip-days__item day">
     <ul class="trip-events__list"></ul>
   </li>`;
 
-export default class List extends Abstract {
+export default class List extends AbstractComponent {
   constructor(index, date, events, transfer, activity, city, option) {
     super();
     this._index = index;

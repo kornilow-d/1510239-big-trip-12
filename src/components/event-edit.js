@@ -1,4 +1,4 @@
-import Abstract from '../abstract';
+import AbstractComponent from '../abstract-component';
 
 const getEditEventTemplate = ({type, start, end, price, offers, urls, city}, typesOfTransfer, typesOfActivity, cities, options) => `<form class="trip-events__item  event  event--edit" action="#" method="post">
           <header class="event__header">
@@ -102,7 +102,7 @@ const getEditEventTemplate = ({type, start, end, price, offers, urls, city}, typ
           </section>
         </form>`;
 
-export default class EditEvent extends Abstract {
+export default class EditEvent extends AbstractComponent {
   constructor(event, transfer, activity, cities, options) {
     super();
     this._event = event;

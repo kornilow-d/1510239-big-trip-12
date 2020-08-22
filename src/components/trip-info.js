@@ -1,4 +1,4 @@
-import Abstract from "../abstract";
+import AbstractComponent from "../abstract-component";
 
 const getTripInfoTemplate = ({cities, startDate, endDate, totalCost}) => `<section class="trip-main__trip-info trip-info">
   <div class="trip-info__main">
@@ -10,7 +10,7 @@ const getTripInfoTemplate = ({cities, startDate, endDate, totalCost}) => `<secti
   </p>
 </section>`;
 
-export default class TripHeaderInfo extends Abstract {
+export default class TripHeaderInfo extends AbstractComponent {
   constructor(headerProps) {
     super();
     this._data = headerProps;

@@ -1,4 +1,4 @@
-import Abstract from '../abstract';
+import AbstractComponent from '../abstract-component';
 
 import EditEvent from "../components/event-edit";
 
@@ -46,7 +46,7 @@ const getEventTemplate = ({type, city, start, end, hours, minutes, price, offers
     </div >
   </li >`;
 
-export default class Event extends Abstract {
+export default class Event extends AbstractComponent {
   constructor(event) {
     super();
     this._event = event;

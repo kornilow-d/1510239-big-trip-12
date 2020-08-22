@@ -1,4 +1,4 @@
-import Abstract from '../abstract';
+import AbstractComponent from '../abstract-component';
 
 const getMenuTemplate = (value) => `<nav class="trip-controls__trip-tabs  trip-tabs">
   ${value.map((item) => `
@@ -6,7 +6,7 @@ const getMenuTemplate = (value) => `<nav class="trip-controls__trip-tabs  trip-t
   `).join(``)}
 </nav>`;
 
-export default class Menu extends Abstract {
+export default class Menu extends AbstractComponent {
   constructor(value) {
     super();
     this._value = value;
