@@ -16,17 +16,18 @@ import {
 export default class Trip {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
-    this._eventsData = eventsData;
-
     this._sortComponent = new SortView();
-    this._trevelComponent = new DayView(this._eventsData, tripDaysDates, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS);
 
     this._currentSortType = sortType.DEFAULT;
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init() {
+    this._eventsData = eventsData.slice();
     this._sourcedTripEvents = this._eventsData.slice();
+
+    this._trevelComponent = new DayView(this._eventsData, tripDaysDates, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS);
+
     this._renderTripsBoard();
   }
 
@@ -68,6 +69,7 @@ export default class Trip {
   }
 
   _renderEvents() {
+    console.log(this._eventsData);
     render(this._boardContainer, this._trevelComponent.getElement(), RenderPosition.BEFOREEND);
   }
 }
