@@ -18,6 +18,10 @@ export default class Day extends AbstractComponent {
     this._options = options;
   }
 
+  updateEvents(events) {
+    this._events = events;
+  }
+
   _getTemplate() {
     console.log('Используется', this._events);
     return getDaysListTemplate(this._events, this._dates, this._transfer, this._activity, this._cities, this._options);

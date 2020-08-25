@@ -27,7 +27,6 @@ export default class Trip {
     this._sourcedTripEvents = this._eventsData.slice();
 
     this._trevelComponent = new DayView(this._eventsData, tripDaysDates, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS);
-
     this._renderTripsBoard();
   }
 
@@ -66,6 +65,7 @@ export default class Trip {
 
   _clearEvents() {
     remove(this._trevelComponent);
+    this._trevelComponent.updateEvents(this._eventsData);
   }
 
   _renderEvents() {
