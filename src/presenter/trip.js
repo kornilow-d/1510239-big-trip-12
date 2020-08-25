@@ -69,7 +69,6 @@ export default class Trip {
   }
 
   _renderEvents() {
-    console.log(this._eventsData);
     render(this._boardContainer, this._trevelComponent.getElement(), RenderPosition.BEFOREEND);
   }
 }
