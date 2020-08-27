@@ -29,6 +29,12 @@ export const filtersProps = [
   {title: `Past`, active: false}
 ];
 
+export const sortType = {
+  DEFAULT: `default`,
+  TIME: `time`,
+  PRICE: `price`
+};
+
 // Модель данных Event-а
 const getEvent = () => {
   const start = getRandomDate(DAYS_COUNT);
@@ -54,7 +60,7 @@ const getEvent = () => {
 // Получаем массив евентов
 const getEventsData = (count) => {
   const events = new Array(count);
-  return events.fill(``).map(getEvent).sort((a, b) => a.start - b.start);
+  return events.fill(``).map(getEvent);
 };
 
 // Получаем список городов
