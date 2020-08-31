@@ -1,6 +1,8 @@
 import {getRandomInteger, getRandomElement, getArrayImg, getRandomArray, getRandomDate} from "./utils/utils";
 
-const EVENT_COUNT = 16;
+import {nanoid} from 'nanoid'
+
+const EVENT_COUNT = 10;
 
 // Data
 export const CITIES = [`London`, `Liverpool`, `Birmingham`, `Oxford`, `Cambridge`, `Manchester`, `Nottingham`, `Sheffield`, `Leeds`, `Bristol`, `Newcastle`];
@@ -43,6 +45,7 @@ const getEvent = () => {
   const hours = Math.trunc(residualInHours);
   const minutes = Math.trunc((residualInHours - hours) * 60);
   return {
+    id: nanoid(),
     type: getRandomElement(TYPES_OF_EVENT),
     city: getRandomElement(CITIES),
     price: getRandomInteger(1, 1000),

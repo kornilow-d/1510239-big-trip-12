@@ -1,42 +1,81 @@
 import SortView from '../components/sort';
 import DayView from '../components/days-list';
+import List from '../components/card';
+import NoPoint from '../components/no-point';
 
-import {render, RenderPosition, sortCardTime, sortCardPrice, remove} from '../utils/render';
+import EventsComponent from '../presenter/event';
+
+import {render, RenderPosition, sortCardTime, sortCardPrice, remove, updateItem} from '../utils/render';
 import {sortType} from '../data';
 
-import {
-  eventsData,
-  tripDaysDates,
-  TYPES_OF_TRANSFER,
-  TYPES_OF_ACTIVITY,
-  CITIES,
-  OPTIONS,
-} from "../data.js";
+import {eventsData, tripDaysDates} from "../data.js";
 
 export default class Trip {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
+    this._dates = tripDaysDates;
+    this._nowEvent = [];
+    this._eventsPresenter = {};
+
     this._sortComponent = new SortView();
+    this._trevelComponent = new DayView();
+    this._noPointComponent = new NoPoint();
 
     this._currentSortType = sortType.DEFAULT;
+
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handleEventsChange = this._handleEventsChange.bind(this);
   }
 
   init() {
     this._eventsData = eventsData.slice();
     this._sourcedTripEvents = this._eventsData.slice();
 
-    this._trevelComponent = new DayView(this._eventsData, tripDaysDates, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS);
     this._renderTripsBoard();
   }
 
+  // Рендер всей доски
   _renderTripsBoard() {
-    render(this._boardContainer, this._trevelComponent.getElement(), RenderPosition.BEFOREEND);
+    render(this._boardContainer, this._trevelComponent, RenderPosition.BEFOREEND);
     this._renderSort();
+
+    if (this._eventsData.length === 0) {
+      render(this._boardContainer, this._noPointComponent, RenderPosition.BEFOREEND);
+    } else {
+      this._renderDaysList();
+    }
   }
 
+  // Рендер дней
+  _renderDaysList() {
+    this._createDaysList().forEach((item) => {
+      render(this._trevelComponent, item, RenderPosition.BEFOREEND);
+    });
+  }
+
+  _createDaysList() {
+    return Array.from(this._dates).map((date, index) => {
+      this._nowEvent = this._eventsData.filter((event) => {
+        const eventDate = `${new Date(event.start)}`.slice(4, 10);
+        return eventDate === date;
+      });
+
+      this._list = new List(index, date).getElement();
+
+      this._nowEvent.forEach((item) => {
+        const point = new EventsComponent(this._list.querySelector(`.trip-events__list`));
+        point.init(item);
+        this._eventsPresenter[item.id] = point;
+        return;
+      });
+
+      return this._list;
+    });
+  }
+
+  // Рендер сортировки
   _renderSort() {
-    render(this._boardContainer, this._sortComponent.getElement(), RenderPosition.AFTERBEGIN);
+    render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
@@ -46,7 +85,7 @@ export default class Trip {
     }
     this._sortEvents(type);
     this._clearEvents();
-    this._renderEvents();
+    this._renderTripsBoard();
   }
 
   _sortEvents(type) {
@@ -63,12 +102,20 @@ export default class Trip {
     this._currentSortType = type;
   }
 
+  // Чистка доски
   _clearEvents() {
     remove(this._trevelComponent);
-    this._trevelComponent.updateEvents(this._eventsData);
+    Object
+      .values(this._eventsPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._eventsPresenter = {};
+    this._renderDaysList();
   }
 
-  _renderEvents() {
-    render(this._boardContainer, this._trevelComponent.getElement(), RenderPosition.BEFOREEND);
+  // Хендлеры
+  _handleEventsChange(updatedEvent) {
+    this._eventsData = updateItem(this._eventsData, updatedEvent);
+    this._sourcedTripEvents = updateItem(this._sourcedTripEvents, updatedEvent);
+    this._eventsPresenter[updatedEvent.id].init(updatedEvent);
   }
 }
