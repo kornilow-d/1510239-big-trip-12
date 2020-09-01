@@ -61,9 +61,10 @@ export default class Trip {
       });
 
       this._list = new List(index, date).getElement();
+      this._tripList = this._list.querySelector(`.trip-events__list`);
 
       this._nowEvent.forEach((item) => {
-        const point = new EventsComponent(this._list.querySelector(`.trip-events__list`));
+        const point = new EventsComponent(this._tripList, this._handleEventsChange);
         point.init(item);
         this._eventsPresenter[item.id] = point;
         return;
@@ -115,6 +116,7 @@ export default class Trip {
   // Хендлеры
   _handleEventsChange(updatedEvent) {
     this._eventsData = updateItem(this._eventsData, updatedEvent);
+    console.log(this._eventsData);
     this._sourcedTripEvents = updateItem(this._sourcedTripEvents, updatedEvent);
     this._eventsPresenter[updatedEvent.id].init(updatedEvent);
   }

@@ -127,6 +127,7 @@ export default class EditEvent extends AbstractComponent {
 
     this._submitFormHandler = this._submitFormHandler.bind(this);
     this._resetFormHandler = this._resetFormHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   _getTemplate() {
@@ -140,7 +141,7 @@ export default class EditEvent extends AbstractComponent {
 
   _submitFormHandler(evt) {
     evt.preventDefault();
-    this._callback.submitForm();
+    this._callback.submitForm(this._event);
   }
 
   setResetFormHandler(callback) {
@@ -151,5 +152,15 @@ export default class EditEvent extends AbstractComponent {
   _resetFormHandler(evt) {
     evt.preventDefault();
     this._callback.resetForm();
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
   }
 }

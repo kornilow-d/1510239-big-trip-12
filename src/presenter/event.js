@@ -10,13 +10,15 @@ import {
 } from "../data";
 
 export default class Events {
-  constructor(list) {
+  constructor(list, changeData) {
     this._list = list;
+    this._changeData = changeData;
 
     this._eventComponent = null;
     this._editEventComponent = null;
 
     this._addEvent = this._addEvent.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._rollupFormHadler = this._rollupFormHadler.bind(this);
 
     this._callback = {};
@@ -31,6 +33,8 @@ export default class Events {
     this._eventComponent = new Event(this._event);
     this._editEventComponent = new EditEvent(this._event, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS);
     this._setUpChildComponents();
+
+    this._editEventComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
     if (prevEventComponent === null || prevEditEventComponent === null) {
       render(this._list, this._eventComponent, RenderPosition.BEFOREEND);
@@ -54,20 +58,36 @@ export default class Events {
     remove(this._editEventComponent);
   }
 
+  _handleFavoriteClick() {
+    console.log(this._event.isFavorite);
+    this._changeData(
+      Object.assign(
+        {},
+        this._event,
+        {
+          isFavorite: !this._event.isFavorite
+        }
+      )
+    );
+    console.log(this._event.isFavorite);
+  }
+
   _setUpChildComponents() {
     this._addEvent(
+      this._event,
       this._eventComponent,
       this._editEventComponent
     );
   }
 
-  _addEvent(card, form) {
+  _addEvent(event, card, form) {
     this._setRollupFormHandler(() => {
       replace(form, card);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
     this._editEventComponent.setSubmitFormHandler(() => {
+      this._changeData(event);
       replace(card, form);
     });
 

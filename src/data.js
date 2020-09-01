@@ -56,9 +56,9 @@ const getEvent = () => {
     minutes,
     offers: new Set(getRandomArray(1, 2, OPTIONS)),
     urls: new Set(getArrayImg(3, 5)),
+    isFavorite: false,
   };
 };
-
 
 // Получаем массив евентов
 const getEventsData = (count) => {
