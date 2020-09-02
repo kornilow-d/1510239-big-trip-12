@@ -84,9 +84,9 @@ export default class Events {
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
-    this._editEventComponent.setSubmitFormHandler(() => {
+    this._editEventComponent.setSubmitFormHandler((data) => {
       replace(card, form);
-      this._changeData(event);
+      this._changeData(data);
     });
 
     this._editEventComponent.setResetFormHandler(() => {

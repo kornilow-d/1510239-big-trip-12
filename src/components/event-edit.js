@@ -72,8 +72,8 @@ const getEditEventTemplate = (data, typesOfTransfer, typesOfActivity, cities, op
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
 
-        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
-                      <label class="event__favorite-btn" for="event-favorite-1">
+        <input id="event-favorite-${start}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
+                      <label class="event__favorite-btn" for="event-favorite-${start}">
                         <span class="visually-hidden">Add to favorite</span>
                         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
                           <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -94,8 +94,8 @@ const getEditEventTemplate = (data, typesOfTransfer, typesOfActivity, cities, op
 
             ${options.map((option) => `
             <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-${option.id}" ${(Array.from(offers).filter((offer) => offer.option === option.option)).length > 0 ? `checked` : ``}>
-              <label class="event__offer-label" for="event-offer-${option.id}-1">
+            <input class="event__offer-checkbox  visually-hidden" id="event-offer-${option.id}-${start}" type="checkbox" name="event-offer-${option.id}" ${(Array.from(offers).filter((offer) => offer.option === option.option)).length > 0 ? `checked` : ``}>
+              <label class="event__offer-label" for="event-offer-${option.id}-${start}">
                 <span class="event__offer-title">${option.option}</span>
                   &plus;
                   &euro;&nbsp;<span class="event__offer-price">${option.price}</span>
@@ -149,8 +149,9 @@ export default class EditEvent extends AbstractComponent {
     const newElement = this.getElement();
 
     parent.replaceChild(newElement, prevElement);
-    console.log(newElement);
     prevElement = null;
+
+    this.restoreHandlers();
   }
 
   updateData(update, justDataUpdating) {
@@ -164,9 +165,11 @@ export default class EditEvent extends AbstractComponent {
       update
     );
 
-    // if (justDataUpdating) {
-    //   return;
-    // }
+    console.log(this._data);
+
+    if (justDataUpdating) {
+      return;
+    }
 
     this.updateElement();
   }
@@ -175,7 +178,14 @@ export default class EditEvent extends AbstractComponent {
     return getEditEventTemplate(this._data, this._transfer, this._activity, this._cities, this._options);
   }
 
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setSubmitFormHandler(this._callback.submitForm, this._data);
+  }
+
   _setInnerHandlers() {
+    this.getElement()
+      .addEventListener(`submit`, this._submitFormHandler);
     this.getElement()
       .querySelector(`.event__input--destination`)
       .addEventListener(`input`, this._descriptionInputHandler);
@@ -190,7 +200,6 @@ export default class EditEvent extends AbstractComponent {
 
   setSubmitFormHandler(callback) {
     this._callback.submitForm = callback;
-    this.getElement().addEventListener(`submit`, this._submitFormHandler);
   }
 
   _submitFormHandler(evt) {
