@@ -116,7 +116,6 @@ export default class Trip {
   // Хендлеры
   _handleEventsChange(updatedEvent) {
     this._eventsData = updateItem(this._eventsData, updatedEvent);
-    console.log(this._eventsData);
     this._sourcedTripEvents = updateItem(this._sourcedTripEvents, updatedEvent);
     this._eventsPresenter[updatedEvent.id].init(updatedEvent);
   }

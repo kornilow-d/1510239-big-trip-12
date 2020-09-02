@@ -1,6 +1,9 @@
 import AbstractComponent from '../abstract-component';
 
-const getEditEventTemplate = ({type, start, end, price, offers, urls, city}, typesOfTransfer, typesOfActivity, cities, options) => `<form class="trip-events__item  event  event--edit" action="#" method="post">
+const getEditEventTemplate = (data, typesOfTransfer, typesOfActivity, cities, options) => {
+  const {type, start, end, price, offers, urls, city, isFavorite} = data;
+
+  return `<form class="trip-events__item  event  event--edit" action="#" method="post">
           <header class="event__header">
             <div class="event__type-wrapper">
               <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -69,7 +72,7 @@ const getEditEventTemplate = ({type, start, end, price, offers, urls, city}, typ
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
 
-        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite">
+        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
                       <label class="event__favorite-btn" for="event-favorite-1">
                         <span class="visually-hidden">Add to favorite</span>
                         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -114,12 +117,15 @@ const getEditEventTemplate = ({type, start, end, price, offers, urls, city}, typ
               </div>
             </section>
           </section>
-        </form>`;
+        </form>`};
+
 
 export default class EditEvent extends AbstractComponent {
   constructor(event, transfer, activity, cities, options) {
     super();
-    this._event = event;
+
+    this._data = EditEvent.parseTaskToData(event);
+
     this._transfer = transfer;
     this._activity = activity;
     this._cities = cities;
@@ -128,10 +134,58 @@ export default class EditEvent extends AbstractComponent {
     this._submitFormHandler = this._submitFormHandler.bind(this);
     this._resetFormHandler = this._resetFormHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+
+    this._descriptionInputHandler = this._descriptionInputHandler.bind(this);
+
+    this._setInnerHandlers();
+  }
+
+  updateElement() {
+    let prevElement = this.getElement();
+    const parent = prevElement.parentElement;
+
+    this.removeElement();
+
+    const newElement = this.getElement();
+
+    parent.replaceChild(newElement, prevElement);
+    console.log(newElement);
+    prevElement = null;
+  }
+
+  updateData(update, justDataUpdating) {
+    if (!update) {
+      return;
+    }
+
+    this._data = Object.assign(
+      {},
+      this._data,
+      update
+    );
+
+    // if (justDataUpdating) {
+    //   return;
+    // }
+
+    this.updateElement();
   }
 
   _getTemplate() {
-    return getEditEventTemplate(this._event, this._transfer, this._activity, this._cities, this._options);
+    return getEditEventTemplate(this._data, this._transfer, this._activity, this._cities, this._options);
+  }
+
+  _setInnerHandlers() {
+    this.getElement()
+      .querySelector(`.event__input--destination`)
+      .addEventListener(`input`, this._descriptionInputHandler);
+  }
+
+  _descriptionInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      city: evt.target.value
+    }, true);
   }
 
   setSubmitFormHandler(callback) {
@@ -141,7 +195,7 @@ export default class EditEvent extends AbstractComponent {
 
   _submitFormHandler(evt) {
     evt.preventDefault();
-    this._callback.submitForm(this._event);
+    this._callback.submitForm(EditEvent.parseDataToTask(this._data));
   }
 
   setResetFormHandler(callback) {
@@ -162,5 +216,21 @@ export default class EditEvent extends AbstractComponent {
   _favoriteClickHandler(evt) {
     evt.preventDefault();
     this._callback.favoriteClick();
+  }
+
+  static parseTaskToData(event) {
+    return Object.assign(
+      {},
+      event,
+      {
+        isFavorite: event.isFavorite,
+      }
+    );
+  }
+
+  static parseDataToTask(data) {
+    data = Object.assign({}, data);
+    delete data.isFavorite;
+    return data;
   }
 }

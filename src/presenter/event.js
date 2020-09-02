@@ -59,7 +59,6 @@ export default class Events {
   }
 
   _handleFavoriteClick() {
-    console.log(this._event.isFavorite);
     this._changeData(
       Object.assign(
         {},
@@ -69,7 +68,6 @@ export default class Events {
         }
       )
     );
-    console.log(this._event.isFavorite);
   }
 
   _setUpChildComponents() {
@@ -87,8 +85,8 @@ export default class Events {
     });
 
     this._editEventComponent.setSubmitFormHandler(() => {
-      this._changeData(event);
       replace(card, form);
+      this._changeData(event);
     });
 
     this._editEventComponent.setResetFormHandler(() => {
@@ -114,5 +112,4 @@ export default class Events {
     evt.preventDefault();
     this._callback.rollupForm();
   }
-
 }
