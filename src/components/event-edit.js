@@ -120,7 +120,8 @@ const getEditEventTemplate = (data, typesOfTransfer, typesOfActivity, cities, op
               </div>
             </section>
           </section>
-        </form>`};
+        </form>`;
+};
 
 
 export default class EditEvent extends SmartView {
@@ -147,9 +148,7 @@ export default class EditEvent extends SmartView {
   }
 
   reset(event) {
-    this.updateData(
-      EditEvent.parseTaskToData(event)
-    );
+    this.updateData(EditEvent.parseTaskToData(event));
   }
 
   restoreHandlers() {
@@ -184,13 +183,10 @@ export default class EditEvent extends SmartView {
       city: evt.target.value,
       description: getRandomElement(DESCRIPTIONS),
     }, true);
-    console.log(this._data);
   }
 
   _favoriteHandler(evt) {
-    this.updateData({
-      isFavorite: !this._data.isFavorite,
-    }, true);
+    this.updateData({isFavorite: !this._data.isFavorite, }, true);
   }
 
   setFormSubmitHandler(callback) {
