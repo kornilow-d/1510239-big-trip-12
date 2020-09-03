@@ -185,8 +185,8 @@ export default class EditEvent extends SmartView {
     }, true);
   }
 
-  _favoriteHandler(evt) {
-    this.updateData({isFavorite: !this._data.isFavorite, }, true);
+  _favoriteHandler() {
+    this.updateData({isFavorite: !this._data.isFavorite}, true);
   }
 
   setFormSubmitHandler(callback) {
