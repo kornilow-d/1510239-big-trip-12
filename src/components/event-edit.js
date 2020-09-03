@@ -1,4 +1,4 @@
-import AbstractComponent from '../abstract-component';
+import SmartView from './smart';
 
 const getEditEventTemplate = (data, typesOfTransfer, typesOfActivity, cities, options) => {
   const {type, start, end, price, offers, urls, city, isFavorite} = data;
@@ -120,7 +120,7 @@ const getEditEventTemplate = (data, typesOfTransfer, typesOfActivity, cities, op
         </form>`};
 
 
-export default class EditEvent extends AbstractComponent {
+export default class EditEvent extends SmartView {
   constructor(event, transfer, activity, cities, options) {
     super();
 
@@ -133,49 +133,23 @@ export default class EditEvent extends AbstractComponent {
 
     this._submitFormHandler = this._submitFormHandler.bind(this);
     this._resetFormHandler = this._resetFormHandler.bind(this);
-    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    // this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+
+    this._favoriteHandler = this._favoriteHandler.bind(this);
 
     this._descriptionInputHandler = this._descriptionInputHandler.bind(this);
 
     this._setInnerHandlers();
   }
 
-  updateElement() {
-    let prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-
-    this.removeElement();
-
-    const newElement = this.getElement();
-
-    parent.replaceChild(newElement, prevElement);
-    prevElement = null;
-
-    this.restoreHandlers();
-  }
-
-  updateData(update, justDataUpdating) {
-    if (!update) {
-      return;
-    }
-
-    this._data = Object.assign(
-      {},
-      this._data,
-      update
-    );
-
-    console.log(this._data);
-
-    if (justDataUpdating) {
-      return;
-    }
-
-    this.updateElement();
-  }
-
   _getTemplate() {
     return getEditEventTemplate(this._data, this._transfer, this._activity, this._cities, this._options);
+  }
+
+  reset(event) {
+    this.updateData(
+      EditEvent.parseTaskToData(event)
+    );
   }
 
   restoreHandlers() {
@@ -189,12 +163,21 @@ export default class EditEvent extends AbstractComponent {
     this.getElement()
       .querySelector(`.event__input--destination`)
       .addEventListener(`input`, this._descriptionInputHandler);
+    this.getElement()
+      .querySelector(`.event__favorite-checkbox`)
+      .addEventListener(`click`, this._favoriteHandler);
   }
 
   _descriptionInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
       city: evt.target.value
+    }, true);
+  }
+
+  _favoriteHandler(evt) {
+    this.updateData({
+      isFavorite: !this._data.isFavorite,
     }, true);
   }
 
@@ -217,29 +200,26 @@ export default class EditEvent extends AbstractComponent {
     this._callback.resetForm();
   }
 
-  setFavoriteClickHandler(callback) {
-    this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, this._favoriteClickHandler);
-  }
+  // setFavoriteClickHandler(callback) {
+  //   this._callback.favoriteClick = callback;
+  //   this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, this._favoriteClickHandler);
+  // }
 
-  _favoriteClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.favoriteClick();
-  }
+  // _favoriteClickHandler(evt) {
+  //   evt.preventDefault();
+  //   console.log(this._callback.favoriteClick);
+  //   this._callback.favoriteClick();
+  // }
 
   static parseTaskToData(event) {
     return Object.assign(
       {},
       event,
-      {
-        isFavorite: event.isFavorite,
-      }
     );
   }
 
   static parseDataToTask(data) {
     data = Object.assign({}, data);
-    delete data.isFavorite;
     return data;
   }
 }

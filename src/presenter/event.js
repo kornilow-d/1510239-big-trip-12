@@ -18,7 +18,7 @@ export default class Events {
     this._editEventComponent = null;
 
     this._addEvent = this._addEvent.bind(this);
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    // this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._rollupFormHadler = this._rollupFormHadler.bind(this);
 
     this._callback = {};
@@ -34,7 +34,7 @@ export default class Events {
     this._editEventComponent = new EditEvent(this._event, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS);
     this._setUpChildComponents();
 
-    this._editEventComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    // this._editEventComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
     if (prevEventComponent === null || prevEditEventComponent === null) {
       render(this._list, this._eventComponent, RenderPosition.BEFOREEND);
@@ -58,17 +58,17 @@ export default class Events {
     remove(this._editEventComponent);
   }
 
-  _handleFavoriteClick() {
-    this._changeData(
-      Object.assign(
-        {},
-        this._event,
-        {
-          isFavorite: !this._event.isFavorite
-        }
-      )
-    );
-  }
+  // _handleFavoriteClick() {
+  //   this._changeData(
+  //     Object.assign(
+  //       {},
+  //       this._event,
+  //       {
+  //         isFavorite: !this._event.isFavorite
+  //       }
+  //     )
+  //   );
+  // }
 
   _setUpChildComponents() {
     this._addEvent(
@@ -90,12 +90,14 @@ export default class Events {
     });
 
     this._editEventComponent.setResetFormHandler(() => {
+      this._editEventComponent.reset(event);
       replace(card, form);
     });
 
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
         evt.preventDefault();
+        this._editEventComponent.reset(event);
         replace(card, form);
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
