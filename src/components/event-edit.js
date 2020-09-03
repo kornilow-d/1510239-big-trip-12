@@ -212,10 +212,7 @@ export default class EditEvent extends SmartView {
   }
 
   static parseTaskToData(event) {
-    return Object.assign(
-      {},
-      event,
-    );
+    return Object.assign({}, event);
   }
 
   static parseDataToTask(data) {

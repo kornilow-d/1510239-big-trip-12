@@ -10,7 +10,7 @@ const getCardTemplate = (dayIndex, date) => `<li class="trip-days__item day">
   </li>`;
 
 export default class List extends AbstractComponent {
-  constructor(index, date, events) {
+  constructor(index, date) {
     super();
     this._index = index;
     this._date = date;
