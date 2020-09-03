@@ -31,3 +31,7 @@ export const getRandomArray = (min, max, array) => {
 export const getRandomDate = (days) => {
   return Date.now() + (getRandomInteger(0, (days * 24))) * TIME_IN_MS / 24;
 };
+
+export const escDown = (event) => {
+  return event === `Escape` || event === `Esc`;
+};

@@ -25,6 +25,7 @@ export default class Trip {
 
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleEventsChange = this._handleEventsChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
   }
 
   init() {
@@ -32,6 +33,12 @@ export default class Trip {
     this._sourcedTripEvents = this._eventsData.slice();
 
     this._renderTripsBoard();
+  }
+
+  _handleModeChange() {
+    Object
+      .values(this._eventsPresenter)
+      .forEach((presenter) => presenter.resetView());
   }
 
   // Рендер всей доски
@@ -64,7 +71,7 @@ export default class Trip {
       this._tripList = this._list.querySelector(`.trip-events__list`);
 
       this._nowEvent.forEach((item) => {
-        const point = new EventsComponent(this._tripList, this._handleEventsChange);
+        const point = new EventsComponent(this._tripList, this._handleEventsChange, this._handleModeChange);
         point.init(item);
         this._eventsPresenter[item.id] = point;
         return;

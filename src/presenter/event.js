@@ -1,25 +1,33 @@
 import Event from '../components/event';
 import EditEvent from "../components/event-edit";
 import {render, RenderPosition, replace, remove} from '../utils/render';
+import {escDown} from '../utils/utils';
 
 import {
   TYPES_OF_TRANSFER,
   TYPES_OF_ACTIVITY,
   CITIES,
   OPTIONS,
+  Mode,
 } from "../data";
 
 export default class Events {
-  constructor(list, changeData) {
+  constructor(list, changeData, changeMode) {
     this._list = list;
+
     this._changeData = changeData;
+    this._changeMode = changeMode;
 
     this._eventComponent = null;
     this._editEventComponent = null;
+    this._mode = Mode.DEFAULT;
 
-    this._addEvent = this._addEvent.bind(this);
-    // this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
-    this._rollupFormHadler = this._rollupFormHadler.bind(this);
+    // this._addEvent = this._addEvent.bind(this);
+
+    this._handleEditClick = this._handleEditClick.bind(this);
+    this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._handleResetForm = this._handleResetForm.bind(this);
 
     this._callback = {};
   }
@@ -32,20 +40,21 @@ export default class Events {
 
     this._eventComponent = new Event(this._event);
     this._editEventComponent = new EditEvent(this._event, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS);
-    this._setUpChildComponents();
 
-    // this._editEventComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._eventComponent.setEditClickHandler(this._handleEditClick);
+    this._editEventComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._editEventComponent.setResetFormHandler(this._handleResetForm);
 
     if (prevEventComponent === null || prevEditEventComponent === null) {
       render(this._list, this._eventComponent, RenderPosition.BEFOREEND);
       return;
     }
 
-    if (this._list.contains(prevEventComponent.getElement())) {
+    if (this._mode === Mode.DEFAULT) {
       replace(this._eventComponent, prevEventComponent);
     }
 
-    if (this._list.contains(prevEditEventComponent.getElement())) {
+    if (this._mode === Mode.EDITING) {
       replace(this._editEventComponent, prevEditEventComponent);
     }
 
@@ -58,60 +67,44 @@ export default class Events {
     remove(this._editEventComponent);
   }
 
-  // _handleFavoriteClick() {
-  //   this._changeData(
-  //     Object.assign(
-  //       {},
-  //       this._event,
-  //       {
-  //         isFavorite: !this._event.isFavorite
-  //       }
-  //     )
-  //   );
-  // }
-
-  _setUpChildComponents() {
-    this._addEvent(
-      this._event,
-      this._eventComponent,
-      this._editEventComponent
-    );
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._replaceFormToCard();
+    }
   }
 
-  _addEvent(event, card, form) {
-    this._setRollupFormHandler(() => {
-      replace(form, card);
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    this._editEventComponent.setSubmitFormHandler((data) => {
-      replace(card, form);
-      this._changeData(data);
-    });
-
-    this._editEventComponent.setResetFormHandler(() => {
-      this._editEventComponent.reset(event);
-      replace(card, form);
-    });
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        this._editEventComponent.reset(event);
-        replace(card, form);
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
+  _replaceCardToForm() {
+    replace(this._editEventComponent, this._eventComponent);
+    document.addEventListener(`keydown`, this._onEscKeyDown);
+    this._changeMode();
+    this._mode = Mode.EDITING;
   }
 
-  // Handler
-  _setRollupFormHandler(callback) {
-    this._callback.rollupForm = callback;
-    this._eventComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._rollupFormHadler);
+  _replaceFormToCard() {
+    replace(this._eventComponent, this._editEventComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+    this._mode = Mode.DEFAULT;
   }
 
-  _rollupFormHadler(evt) {
-    evt.preventDefault();
-    this._callback.rollupForm();
+  _onEscKeyDown(evt) {
+    if (escDown(evt.key)) {
+      evt.preventDefault();
+      this._editEventComponent.reset(this._event);
+      this._replaceFormToCard();
+    }
+  }
+
+  _handleEditClick() {
+    this._replaceCardToForm();
+  }
+
+  _handleFormSubmit(event) {
+    this._changeData(event);
+    this._replaceFormToCard();
+  }
+
+  _handleResetForm() {
+    this._editEventComponent.reset(this._event);
+    this._replaceFormToCard();
   }
 }

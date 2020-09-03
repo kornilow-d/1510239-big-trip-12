@@ -1,7 +1,10 @@
 import SmartView from './smart';
 
+import {DESCRIPTIONS} from "../data";
+import {getRandomElement} from "../utils/utils";
+
 const getEditEventTemplate = (data, typesOfTransfer, typesOfActivity, cities, options) => {
-  const {type, start, end, price, offers, urls, city, isFavorite} = data;
+  const {type, start, end, price, description, offers, urls, city, isFavorite} = data;
 
   return `<form class="trip-events__item  event  event--edit" action="#" method="post">
           <header class="event__header">
@@ -80,8 +83,8 @@ const getEditEventTemplate = (data, typesOfTransfer, typesOfActivity, cities, op
                         </svg>
                       </label>
 
-                      <button class="event__rollup-btn" type="button">
-                        <span class="visually-hidden">Open event</span>
+                      <button class="event__rollup-btn event__rollup-btn--close" type="button">
+                        <span class="visually-hidden">Close event</span>
                       </button>
           </header>
 
@@ -108,7 +111,7 @@ const getEditEventTemplate = (data, typesOfTransfer, typesOfActivity, cities, op
 
                   <section class="event__section  event__section--destination">
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-                    <p class="event__destination-description">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
+                    <p class="event__destination-description">${description}</p>
 
                     <div class="event__photos-container">
                       <div class="event__photos-tape">
@@ -133,10 +136,7 @@ export default class EditEvent extends SmartView {
 
     this._submitFormHandler = this._submitFormHandler.bind(this);
     this._resetFormHandler = this._resetFormHandler.bind(this);
-    // this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
-
     this._favoriteHandler = this._favoriteHandler.bind(this);
-
     this._descriptionInputHandler = this._descriptionInputHandler.bind(this);
 
     this._setInnerHandlers();
@@ -154,7 +154,7 @@ export default class EditEvent extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
-    this.setSubmitFormHandler(this._callback.submitForm, this._data);
+    this.setFormSubmitHandler(this._callback.submitForm, this._data);
   }
 
   _setInnerHandlers() {
@@ -164,15 +164,27 @@ export default class EditEvent extends SmartView {
       .querySelector(`.event__input--destination`)
       .addEventListener(`input`, this._descriptionInputHandler);
     this.getElement()
+      .querySelector(`.event__input--price`)
+      .addEventListener(`input`, this._descriptionInputHandler);
+    this.getElement()
       .querySelector(`.event__favorite-checkbox`)
       .addEventListener(`click`, this._favoriteHandler);
+    this.getElement()
+      .querySelector(`.event__reset-btn`)
+      .addEventListener(`click`, this._resetFormHandler);
+    this.getElement()
+      .querySelector(`.event__rollup-btn--close`)
+      .addEventListener(`click`, this._resetFormHandler);
   }
 
   _descriptionInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
-      city: evt.target.value
+      price: evt.target.value,
+      city: evt.target.value,
+      description: getRandomElement(DESCRIPTIONS),
     }, true);
+    console.log(this._data);
   }
 
   _favoriteHandler(evt) {
@@ -181,7 +193,7 @@ export default class EditEvent extends SmartView {
     }, true);
   }
 
-  setSubmitFormHandler(callback) {
+  setFormSubmitHandler(callback) {
     this._callback.submitForm = callback;
   }
 
@@ -192,24 +204,12 @@ export default class EditEvent extends SmartView {
 
   setResetFormHandler(callback) {
     this._callback.resetForm = callback;
-    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._resetFormHandler);
   }
 
   _resetFormHandler(evt) {
     evt.preventDefault();
     this._callback.resetForm();
   }
-
-  // setFavoriteClickHandler(callback) {
-  //   this._callback.favoriteClick = callback;
-  //   this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, this._favoriteClickHandler);
-  // }
-
-  // _favoriteClickHandler(evt) {
-  //   evt.preventDefault();
-  //   console.log(this._callback.favoriteClick);
-  //   this._callback.favoriteClick();
-  // }
 
   static parseTaskToData(event) {
     return Object.assign(
