@@ -1,6 +1,12 @@
-import AbstractComponent from '../abstract-component';
+import SmartView from './smart';
 
-const getEditEventTemplate = ({type, start, end, price, offers, urls, city}, typesOfTransfer, typesOfActivity, cities, options) => `<form class="trip-events__item  event  event--edit" action="#" method="post">
+import {DESCRIPTIONS} from "../data";
+import {getRandomElement} from "../utils/utils";
+
+const getEditEventTemplate = (data, typesOfTransfer, typesOfActivity, cities, options) => {
+  const {type, start, end, price, description, offers, urls, city, isFavorite} = data;
+
+  return `<form class="trip-events__item  event  event--edit" action="#" method="post">
           <header class="event__header">
             <div class="event__type-wrapper">
               <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -68,7 +74,21 @@ const getEditEventTemplate = ({type, start, end, price, offers, urls, city}, typ
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
+
+        <input id="event-favorite-${start}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
+                      <label class="event__favorite-btn" for="event-favorite-${start}">
+                        <span class="visually-hidden">Add to favorite</span>
+                        <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+                          <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+                        </svg>
+                      </label>
+
+                      <button class="event__rollup-btn event__rollup-btn--close" type="button">
+                        <span class="visually-hidden">Close event</span>
+                      </button>
           </header>
+
+          
       <section class="event__details">
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
@@ -77,8 +97,8 @@ const getEditEventTemplate = ({type, start, end, price, offers, urls, city}, typ
 
             ${options.map((option) => `
             <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-${option.id}" ${(Array.from(offers).filter((offer) => offer.option === option.option)).length > 0 ? `checked` : ``}>
-              <label class="event__offer-label" for="event-offer-${option.id}-1">
+            <input class="event__offer-checkbox  visually-hidden" id="event-offer-${option.id}-${start}" type="checkbox" name="event-offer-${option.id}" ${(Array.from(offers).filter((offer) => offer.option === option.option)).length > 0 ? `checked` : ``}>
+              <label class="event__offer-label" for="event-offer-${option.id}-${start}">
                 <span class="event__offer-title">${option.option}</span>
                   &plus;
                   &euro;&nbsp;<span class="event__offer-price">${option.price}</span>
@@ -91,7 +111,7 @@ const getEditEventTemplate = ({type, start, end, price, offers, urls, city}, typ
 
                   <section class="event__section  event__section--destination">
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-                    <p class="event__destination-description">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
+                    <p class="event__destination-description">${description}</p>
 
                     <div class="event__photos-container">
                       <div class="event__photos-tape">
@@ -101,11 +121,15 @@ const getEditEventTemplate = ({type, start, end, price, offers, urls, city}, typ
             </section>
           </section>
         </form>`;
+};
 
-export default class EditEvent extends AbstractComponent {
+
+export default class EditEvent extends SmartView {
   constructor(event, transfer, activity, cities, options) {
     super();
-    this._event = event;
+
+    this._data = EditEvent.parseTaskToData(event);
+
     this._transfer = transfer;
     this._activity = activity;
     this._cities = cities;
@@ -113,29 +137,82 @@ export default class EditEvent extends AbstractComponent {
 
     this._submitFormHandler = this._submitFormHandler.bind(this);
     this._resetFormHandler = this._resetFormHandler.bind(this);
+    this._favoriteHandler = this._favoriteHandler.bind(this);
+    this._descriptionInputHandler = this._descriptionInputHandler.bind(this);
+
+    this._setInnerHandlers();
   }
 
   _getTemplate() {
-    return getEditEventTemplate(this._event, this._transfer, this._activity, this._cities, this._options);
+    return getEditEventTemplate(this._data, this._transfer, this._activity, this._cities, this._options);
   }
 
-  setSubmitFormHandler(callback) {
+  reset(event) {
+    this.updateData(EditEvent.parseTaskToData(event));
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.submitForm, this._data);
+  }
+
+  _setInnerHandlers() {
+    this.getElement()
+      .addEventListener(`submit`, this._submitFormHandler);
+    this.getElement()
+      .querySelector(`.event__input--destination`)
+      .addEventListener(`input`, this._descriptionInputHandler);
+    this.getElement()
+      .querySelector(`.event__input--price`)
+      .addEventListener(`input`, this._descriptionInputHandler);
+    this.getElement()
+      .querySelector(`.event__favorite-checkbox`)
+      .addEventListener(`click`, this._favoriteHandler);
+    this.getElement()
+      .querySelector(`.event__reset-btn`)
+      .addEventListener(`click`, this._resetFormHandler);
+    this.getElement()
+      .querySelector(`.event__rollup-btn--close`)
+      .addEventListener(`click`, this._resetFormHandler);
+  }
+
+  _descriptionInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      price: evt.target.value,
+      city: evt.target.value,
+      description: getRandomElement(DESCRIPTIONS),
+    }, true);
+  }
+
+  _favoriteHandler() {
+    this.updateData({isFavorite: !this._data.isFavorite}, true);
+  }
+
+  setFormSubmitHandler(callback) {
     this._callback.submitForm = callback;
-    this.getElement().addEventListener(`submit`, this._submitFormHandler);
   }
 
   _submitFormHandler(evt) {
     evt.preventDefault();
-    this._callback.submitForm();
+    this._callback.submitForm(EditEvent.parseDataToTask(this._data));
   }
 
   setResetFormHandler(callback) {
     this._callback.resetForm = callback;
-    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._resetFormHandler);
   }
 
   _resetFormHandler(evt) {
     evt.preventDefault();
     this._callback.resetForm();
+  }
+
+  static parseTaskToData(event) {
+    return Object.assign({}, event);
+  }
+
+  static parseDataToTask(data) {
+    data = Object.assign({}, data);
+    return data;
   }
 }
