@@ -166,27 +166,9 @@ export default class EditEvent extends SmartView {
       this._datepickerEnd = null;
     }
 
-    this._datepickerStart = flatpickr(
-      this.getElement().querySelector(`[name="event-start-time"]`),
-      {
-        enableTime: true,
-        dateFormat: `d/m/y H:i`,
-        defaultDate: this._data.start,
-        minDate: new Date(),
-        onChange: this._startTimeChangeHandler,
-      }
-    );
+    this._datepickerStart = flatpickr(this.getElement().querySelector(`[name="event-start-time"]`), {enableTime: true, dateFormat: `d/m/y H:i`, defaultDate: this._data.start, minDate: new Date(), onChange: this._startTimeChangeHandler});
 
-    this._datepickerEnd = flatpickr(
-      this.getElement().querySelector(`[name="event-end-time"]`),
-      {
-        enableTime: true,
-        dateFormat: `d/m/y H:i`,
-        defaultDate: this._data.end,
-        minDate: this._data.start,
-        onChange: this._endTimeChangeHandler
-      }
-    );
+    this._datepickerEnd = flatpickr(this.getElement().querySelector(`[name="event-end-time"]`), {enableTime: true, dateFormat: `d/m/y H:i`, defaultDate: this._data.end, minDate: this._data.start, onChange: this._endTimeChangeHandler});
   }
 
   _startTimeChangeHandler([time]) {

@@ -1,5 +1,4 @@
 import {getRandomInteger, getRandomElement, getArrayImg, getRandomArray, getRandomDate} from "./utils/utils";
-import {getDates} from "./utils/render";
 
 import {nanoid} from 'nanoid';
 
@@ -103,7 +102,7 @@ export const totalCostExp = (events) => {
 export const getDataList = (data) => {
   let list = data.map((event) => new Date(event.start));
   return [...new Set(list.map((date) => `${date}`.slice(4, 10)))];
-}
+};
 
 export const eventsData = getEventsData(EVENT_COUNT);
 export const tripDaysDates = new Set(getDatesStart().map((date) => `${date}`.slice(4, 10)));
