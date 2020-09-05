@@ -22,8 +22,6 @@ export default class Events {
     this._editEventComponent = null;
     this._mode = Mode.DEFAULT;
 
-    // this._addEvent = this._addEvent.bind(this);
-
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);

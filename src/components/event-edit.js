@@ -3,6 +3,9 @@ import SmartView from './smart';
 import {DESCRIPTIONS} from "../data";
 import {getRandomElement} from "../utils/utils";
 
+import flatpickr from 'flatpickr';
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+
 const getEditEventTemplate = (data, typesOfTransfer, typesOfActivity, cities, options) => {
   const {type, start, end, price, description, offers, urls, city, isFavorite} = data;
 
@@ -127,8 +130,10 @@ const getEditEventTemplate = (data, typesOfTransfer, typesOfActivity, cities, op
 export default class EditEvent extends SmartView {
   constructor(event, transfer, activity, cities, options) {
     super();
-
     this._data = EditEvent.parseTaskToData(event);
+
+    this._datepickerStart = null;
+    this._datepickerEnd = null;
 
     this._transfer = transfer;
     this._activity = activity;
@@ -138,13 +143,62 @@ export default class EditEvent extends SmartView {
     this._submitFormHandler = this._submitFormHandler.bind(this);
     this._resetFormHandler = this._resetFormHandler.bind(this);
     this._favoriteHandler = this._favoriteHandler.bind(this);
-    this._descriptionInputHandler = this._descriptionInputHandler.bind(this);
+    this._destinationInputHandler = this._destinationInputHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
+
+    this._setDatepicker = this._setDatepicker.bind(this);
+    this._startTimeChangeHandler = this._startTimeChangeHandler.bind(this);
+    this._endTimeChangeHandler = this._endTimeChangeHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatepicker();
   }
 
   _getTemplate() {
     return getEditEventTemplate(this._data, this._transfer, this._activity, this._cities, this._options);
+  }
+
+  _setDatepicker() {
+    if (this._datepickerStart || this._datepickerEnd) {
+      this._datepickerStart.destroy();
+      this._datepickerEnd.destroy();
+      this._datepickerStart = null;
+      this._datepickerEnd = null;
+    }
+
+    this._datepickerStart = flatpickr(
+      this.getElement().querySelector(`[name="event-start-time"]`),
+      {
+        enableTime: true,
+        dateFormat: `d/m/y H:i`,
+        defaultDate: this._data.start,
+        minDate: new Date(),
+        onChange: this._startTimeChangeHandler,
+      }
+    );
+
+    this._datepickerEnd = flatpickr(
+      this.getElement().querySelector(`[name="event-end-time"]`),
+      {
+        enableTime: true,
+        dateFormat: `d/m/y H:i`,
+        defaultDate: this._data.end,
+        minDate: this._data.start,
+        onChange: this._endTimeChangeHandler
+      }
+    );
+  }
+
+  _startTimeChangeHandler([time]) {
+    this.updateData({
+      start: new Date(time).getTime(),
+    });
+  }
+
+  _endTimeChangeHandler([time]) {
+    this.updateData({
+      end: new Date(time).getTime(),
+    });
   }
 
   reset(event) {
@@ -153,6 +207,7 @@ export default class EditEvent extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setDatepicker();
     this.setFormSubmitHandler(this._callback.submitForm, this._data);
   }
 
@@ -161,10 +216,10 @@ export default class EditEvent extends SmartView {
       .addEventListener(`submit`, this._submitFormHandler);
     this.getElement()
       .querySelector(`.event__input--destination`)
-      .addEventListener(`input`, this._descriptionInputHandler);
+      .addEventListener(`input`, this._destinationInputHandler);
     this.getElement()
       .querySelector(`.event__input--price`)
-      .addEventListener(`input`, this._descriptionInputHandler);
+      .addEventListener(`input`, this._priceInputHandler);
     this.getElement()
       .querySelector(`.event__favorite-checkbox`)
       .addEventListener(`click`, this._favoriteHandler);
@@ -176,12 +231,18 @@ export default class EditEvent extends SmartView {
       .addEventListener(`click`, this._resetFormHandler);
   }
 
-  _descriptionInputHandler(evt) {
+  _destinationInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      city: evt.target.value,
+      description: getRandomElement(DESCRIPTIONS),
+    }, true);
+  }
+
+  _priceInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
       price: evt.target.value,
-      city: evt.target.value,
-      description: getRandomElement(DESCRIPTIONS),
     }, true);
   }
 
@@ -195,7 +256,7 @@ export default class EditEvent extends SmartView {
 
   _submitFormHandler(evt) {
     evt.preventDefault();
-    this._callback.submitForm(EditEvent.parseDataToTask(this._data));
+    this._callback.submitForm(this._data);
   }
 
   setResetFormHandler(callback) {
@@ -209,10 +270,5 @@ export default class EditEvent extends SmartView {
 
   static parseTaskToData(event) {
     return Object.assign({}, event);
-  }
-
-  static parseDataToTask(data) {
-    data = Object.assign({}, data);
-    return data;
   }
 }

@@ -1,11 +1,7 @@
-import TripView from './presenter/trip';
-import HeaderView from './presenter/header';
+import App from './presenter/app';
 
-const tripControls = document.querySelector(`.trip-controls`);
-const tripEvents = document.querySelector(`.trip-events`);
+const headComponent = document.querySelector(`.trip-main`);
+const bodyComponent = document.querySelector(`.trip-events`);
 
-const HeaderPresenter = new HeaderView(tripControls);
-HeaderPresenter.init();
-
-const TripPresenter = new TripView(tripEvents);
-TripPresenter.init();
+const app = new App(headComponent, bodyComponent);
+app.init();

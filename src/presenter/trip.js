@@ -6,16 +6,15 @@ import NoPoint from '../components/no-point';
 import EventsComponent from '../presenter/event';
 
 import {render, RenderPosition, sortCardTime, sortCardPrice, remove, updateItem} from '../utils/render';
-import {sortType} from '../data';
-
-import {eventsData, tripDaysDates} from "../data.js";
+import {eventsData, getDataList, sortType} from '../data';
 
 export default class Trip {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
-    this._dates = tripDaysDates;
+
     this._nowEvent = [];
     this._eventsPresenter = {};
+    this._callback = {};
 
     this._sortComponent = new SortView();
     this._trevelComponent = new DayView();
@@ -32,6 +31,12 @@ export default class Trip {
     this._eventsData = eventsData.slice();
     this._sourcedTripEvents = this._eventsData.slice();
 
+    this._sortEvents(sortType.TIME);
+    this._renderTripsBoard();
+  }
+
+  update() {
+    this._clearEvents();
     this._renderTripsBoard();
   }
 
@@ -61,6 +66,8 @@ export default class Trip {
   }
 
   _createDaysList() {
+    this._dates = getDataList(this._eventsData).sort();
+
     return Array.from(this._dates).map((date, index) => {
       this._nowEvent = this._eventsData.filter((event) => {
         const eventDate = `${new Date(event.start)}`.slice(4, 10);
@@ -117,13 +124,22 @@ export default class Trip {
       .values(this._eventsPresenter)
       .forEach((presenter) => presenter.destroy());
     this._eventsPresenter = {};
-    this._renderDaysList();
   }
 
-  // Хендлеры
   _handleEventsChange(updatedEvent) {
     this._eventsData = updateItem(this._eventsData, updatedEvent);
     this._sourcedTripEvents = updateItem(this._sourcedTripEvents, updatedEvent);
     this._eventsPresenter[updatedEvent.id].init(updatedEvent);
   }
+
+  // _getTotalInfo(data) {
+  //   return {
+  //     city: data.map((item) => item.city),
+  //     firstCity: data[0].city,
+  //     lastCity: data[data.length - 1].city,
+  //     startDate: new Date(data[0].start),
+  //     endDate: new Date(data[data.length - 1].end),
+  //     totalCost: totalCostExp(data)
+  //   };
+  // }
 }
