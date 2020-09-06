@@ -1,5 +1,12 @@
+import EventsModal from '../modal/events';
+
 import HeaderView from './header';
 import TripView from './trip';
+
+import {eventsData} from '../data';
+
+const eventsModal = new EventsModal();
+eventsModal.setEvents(eventsData);
 
 export default class App {
   constructor(headContainer, bodyContainer) {
@@ -9,6 +16,6 @@ export default class App {
 
   init() {
     new HeaderView(this._headContainer).init();
-    new TripView(this._bodyContainer).init();
+    new TripView(this._bodyContainer, eventsModal).init();
   }
 }

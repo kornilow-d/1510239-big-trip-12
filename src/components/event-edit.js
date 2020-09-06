@@ -76,7 +76,7 @@ const getEditEventTemplate = (data, typesOfTransfer, typesOfActivity, cities, op
             </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Cancel</button>
+        <button class="event__reset-btn" type="reset">Delete</button>
 
         <input id="event-favorite-${start}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
                       <label class="event__favorite-btn" for="event-favorite-${start}">
@@ -141,6 +141,7 @@ export default class EditEvent extends SmartView {
     this._options = options;
 
     this._submitFormHandler = this._submitFormHandler.bind(this);
+    this._deleteFormHandler = this._deleteFormHandler.bind(this);
     this._resetFormHandler = this._resetFormHandler.bind(this);
     this._favoriteHandler = this._favoriteHandler.bind(this);
     this._destinationInputHandler = this._destinationInputHandler.bind(this);
@@ -152,6 +153,17 @@ export default class EditEvent extends SmartView {
 
     this._setInnerHandlers();
     this._setDatepicker();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepickerStart || this._datepickerEnd) {
+      this._datepickerStart.destroy();
+      this._datepickerEnd.destroy();
+      this._datepickerStart = null;
+      this._datepickerEnd = null;
+    }
   }
 
   _getTemplate() {
@@ -191,6 +203,7 @@ export default class EditEvent extends SmartView {
     this._setInnerHandlers();
     this._setDatepicker();
     this.setFormSubmitHandler(this._callback.submitForm, this._data);
+    this.setDeleteClickHandler(this._callback.delete, this._data);
   }
 
   _setInnerHandlers() {
@@ -207,7 +220,7 @@ export default class EditEvent extends SmartView {
       .addEventListener(`click`, this._favoriteHandler);
     this.getElement()
       .querySelector(`.event__reset-btn`)
-      .addEventListener(`click`, this._resetFormHandler);
+      .addEventListener(`click`, this._deleteFormHandler);
     this.getElement()
       .querySelector(`.event__rollup-btn--close`)
       .addEventListener(`click`, this._resetFormHandler);
@@ -239,6 +252,15 @@ export default class EditEvent extends SmartView {
   _submitFormHandler(evt) {
     evt.preventDefault();
     this._callback.submitForm(this._data);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.delete = callback;
+  }
+
+  _deleteFormHandler(evt) {
+    evt.preventDefault();
+    this._callback.delete(this._data);
   }
 
   setResetFormHandler(callback) {

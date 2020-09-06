@@ -2,6 +2,7 @@ import Event from '../components/event';
 import EditEvent from "../components/event-edit";
 import {render, RenderPosition, replace, remove} from '../utils/render';
 import {escDown} from '../utils/utils';
+import {UserAction, UpdateType} from '../data';
 
 import {
   TYPES_OF_TRANSFER,
@@ -24,6 +25,7 @@ export default class Events {
 
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._handleDeleteClickHandler = this._handleDeleteClickHandler.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._handleResetForm = this._handleResetForm.bind(this);
 
@@ -41,6 +43,7 @@ export default class Events {
 
     this._eventComponent.setEditClickHandler(this._handleEditClick);
     this._editEventComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._editEventComponent.setDeleteClickHandler(this._handleDeleteClickHandler);
     this._editEventComponent.setResetFormHandler(this._handleResetForm);
 
     if (prevEventComponent === null || prevEditEventComponent === null) {
@@ -97,7 +100,20 @@ export default class Events {
   }
 
   _handleFormSubmit(event) {
-    this._changeData(event);
+    this._changeData(
+      UserAction.UPDATE_TASK,
+      UpdateType.MINOR,
+      event
+    );
+    this._replaceFormToCard();
+  }
+
+  _handleDeleteClickHandler(event) {
+    this._changeData(
+      UserAction.DELETE_TASK,
+      UpdateType.MINOR,
+      event
+    );
     this._replaceFormToCard();
   }
 

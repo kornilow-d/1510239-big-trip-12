@@ -5,39 +5,66 @@ import NoPoint from '../components/no-point';
 
 import EventsComponent from '../presenter/event';
 
-import {render, RenderPosition, sortCardTime, sortCardPrice, remove, updateItem} from '../utils/render';
-import {eventsData, getDataList, sortType} from '../data';
+import {render, RenderPosition, sortCardTime, sortCardPrice, remove} from '../utils/render';
+import {getDataList, sortType, UpdateType, UserAction} from '../data';
 
 export default class Trip {
-  constructor(boardContainer) {
+  constructor(boardContainer, eventsModal) {
     this._boardContainer = boardContainer;
+    this._eventsModal = eventsModal;
 
     this._nowEvent = [];
     this._eventsPresenter = {};
     this._callback = {};
 
-    this._sortComponent = new SortView();
-    this._trevelComponent = new DayView();
+    this._sortComponent = null;
+    this._trevelComponent = null;
+
     this._noPointComponent = new NoPoint();
 
     this._currentSortType = sortType.DEFAULT;
 
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-    this._handleEventsChange = this._handleEventsChange.bind(this);
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
+
+    this._eventsModal.addObserver(this._handleModelEvent);
   }
 
   init() {
-    this._eventsData = eventsData.slice();
-    this._sourcedTripEvents = this._eventsData.slice();
-
-    this._sortEvents(sortType.TIME);
+    this._currentSortType = sortType.DEFAULT;
     this._renderTripsBoard();
   }
 
   update() {
-    this._clearEvents();
+    this._clearTripsBoard();
     this._renderTripsBoard();
+  }
+
+  _getEvents() {
+    switch (this._currentSortType) {
+      case sortType.TIME:
+        return this._eventsModal.getEvents().slice().sort(sortCardTime);
+      case sortType.PRICE:
+        return this._eventsModal.getEvents().slice().sort(sortCardPrice);
+      default:
+        return this._eventsModal.getEvents().slice();
+    }
+  }
+
+  _clearTripsBoard({resetSortType = false} = {}) {
+    Object
+      .values(this._eventsPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._eventsPresenter = {};
+
+    remove(this._trevelComponent);
+    remove(this._sortComponent);
+
+    if (resetSortType) {
+      this._currentSortType = sortType.DEFAULT;
+    }
   }
 
   _handleModeChange() {
@@ -46,19 +73,24 @@ export default class Trip {
       .forEach((presenter) => presenter.resetView());
   }
 
-  // Рендер всей доски
   _renderTripsBoard() {
+    if (this._trevelComponent !== null) {
+      this._trevelComponent = null;
+    }
+
+    this._trevelComponent = new DayView();
+
     render(this._boardContainer, this._trevelComponent, RenderPosition.BEFOREEND);
     this._renderSort();
 
-    if (this._eventsData.length === 0) {
+    const countEvent = this._getEvents().length;
+    if (countEvent === 0) {
       render(this._boardContainer, this._noPointComponent, RenderPosition.BEFOREEND);
     } else {
       this._renderDaysList();
     }
   }
 
-  // Рендер дней
   _renderDaysList() {
     this._createDaysList().forEach((item) => {
       render(this._trevelComponent, item, RenderPosition.BEFOREEND);
@@ -66,80 +98,80 @@ export default class Trip {
   }
 
   _createDaysList() {
-    this._dates = getDataList(this._eventsData).sort();
+    this._dates = getDataList(this._getEvents()).sort();
 
     return Array.from(this._dates).map((date, index) => {
-      this._nowEvent = this._eventsData.filter((event) => {
-        const eventDate = `${new Date(event.start)}`.slice(4, 10);
-        return eventDate === date;
-      });
-
+      this._nowEvent = this._getNowEvents(this._getEvents(), date);
       this._list = new List(index, date).getElement();
       this._tripList = this._list.querySelector(`.trip-events__list`);
-
-      this._nowEvent.forEach((item) => {
-        const point = new EventsComponent(this._tripList, this._handleEventsChange, this._handleModeChange);
-        point.init(item);
-        this._eventsPresenter[item.id] = point;
-        return;
-      });
-
+      this._renderPoints(this._nowEvent);
       return this._list;
     });
   }
 
-  // Рендер сортировки
+  _renderPoints(events) {
+    events.forEach((item) => {
+      const point = new EventsComponent(this._tripList, this._handleViewAction, this._handleModeChange);
+      point.init(item);
+      this._eventsPresenter[item.id] = point;
+      return;
+    });
+  }
+
+  _getNowEvents(events, date) {
+    return events.filter((event) => {
+      const eventDate = `${new Date(event.start)}`.slice(4, 10);
+      return eventDate === date;
+    });
+  }
+
   _renderSort() {
-    render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
+    if (this._sortComponent !== null) {
+      this._sortComponent = null;
+    }
+
+    this._sortComponent = new SortView();
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+
+    render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
   }
 
   _handleSortTypeChange(type) {
     if (this._currentSortType === type) {
       return;
     }
-    this._sortEvents(type);
-    this._clearEvents();
+    this._currentSortType = type;
+    this._clearTripsBoard();
     this._renderTripsBoard();
   }
 
-  _sortEvents(type) {
-    switch (type) {
-      case sortType.TIME:
-        this._eventsData.sort(sortCardTime);
+  _handleViewAction(actionType, updateType, update) {
+    switch (actionType) {
+      case UserAction.UPDATE_TASK:
+        this._eventsModal.updateEvent(updateType, update);
         break;
-      case sortType.PRICE:
-        this._eventsData.sort(sortCardPrice);
+      case UserAction.ADD_TASK:
+        this._eventsModel.addEvent(updateType, update);
         break;
-      default:
-        this._eventsData = this._sourcedTripEvents.slice();
+      case UserAction.DELETE_TASK:
+        this._eventsModal.deleteEvent(updateType, update);
+        break;
     }
-    this._currentSortType = type;
   }
 
-  // Чистка доски
-  _clearEvents() {
-    remove(this._trevelComponent);
-    Object
-      .values(this._eventsPresenter)
-      .forEach((presenter) => presenter.destroy());
-    this._eventsPresenter = {};
+  _handleModelEvent(updateType, data) {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this._eventsPresenter[data.id].init(data);
+        break;
+      case UpdateType.MINOR:
+        this._clearTripsBoard();
+        this._renderTripsBoard();
+        break;
+      case UpdateType.MAJOR:
+        this._clearTripsBoard({resetSortType: true});
+        this._renderTripsBoard();
+        break;
+    }
   }
-
-  _handleEventsChange(updatedEvent) {
-    this._eventsData = updateItem(this._eventsData, updatedEvent);
-    this._sourcedTripEvents = updateItem(this._sourcedTripEvents, updatedEvent);
-    this._eventsPresenter[updatedEvent.id].init(updatedEvent);
-  }
-
-  // _getTotalInfo(data) {
-  //   return {
-  //     city: data.map((item) => item.city),
-  //     firstCity: data[0].city,
-  //     lastCity: data[data.length - 1].city,
-  //     startDate: new Date(data[0].start),
-  //     endDate: new Date(data[data.length - 1].end),
-  //     totalCost: totalCostExp(data)
-  //   };
-  // }
 }
