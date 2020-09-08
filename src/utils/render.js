@@ -74,6 +74,7 @@ export const updateItem = (items, update) => {
   ];
 };
 
+
 export const sortCardTime = (cardA, cardB) => {
   return cardA.start - cardB.start;
 };

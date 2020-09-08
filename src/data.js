@@ -87,10 +87,21 @@ const getDatesEnd = () => {
 };
 
 // Получаем полную стоимость поездки
-const totalCost = () => {
+export const totalCost = () => {
   const totalPrice = eventsData.reduce((acc, item) => acc + item.price, 0);
   const totalOffer = eventsData.reduce((acc, item) => acc + Array.from(item.offers).reduce((all, elem) => all + elem.price, 0), 0);
   return totalPrice + totalOffer;
+};
+
+export const totalCostExp = (events) => {
+  const totalPrice = events.reduce((acc, item) => acc + item.price, 0);
+  const totalOffer = events.reduce((acc, item) => acc + Array.from(item.offers).reduce((all, elem) => all + elem.price, 0), 0);
+  return totalPrice + totalOffer;
+};
+
+export const getDataList = (data) => {
+  let list = data.map((event) => new Date(event.start));
+  return [...new Set(list.map((date) => `${date}`.slice(4, 10)))];
 };
 
 export const eventsData = getEventsData(EVENT_COUNT);
@@ -98,9 +109,9 @@ export const tripDaysDates = new Set(getDatesStart().map((date) => `${date}`.sli
 
 export const headerProps = () => {
   return {
-    cities: getCities(),
-    startDate: getDatesStart(),
-    endDate: getDatesEnd(),
-    totalCost: totalCost()
+    cities: getCities(eventsData),
+    startDate: getDatesStart(eventsData),
+    endDate: getDatesEnd(eventsData),
+    totalCost: totalCost(eventsData)
   };
 };
