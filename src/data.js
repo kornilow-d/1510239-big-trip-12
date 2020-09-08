@@ -30,11 +30,11 @@ export const menuProps = [
   {title: `Stats`, active: false},
 ];
 
-export const filtersProps = [
-  {title: `Everything`, active: true},
-  {title: `Future`, active: false},
-  {title: `Past`, active: false}
-];
+export const filtersProps = {
+  ALL: `ALL`,
+  FUTURE: `FUTURE`,
+  PAST: `PAST`
+};
 
 export const sortType = {
   DEFAULT: `default`,

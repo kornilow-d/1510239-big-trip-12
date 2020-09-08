@@ -7,11 +7,13 @@ import EventsComponent from '../presenter/event';
 
 import {render, RenderPosition, sortCardTime, sortCardPrice, remove} from '../utils/render';
 import {getDataList, sortType, UpdateType, UserAction} from '../data';
+import {filter} from "../utils/filter";
 
 export default class Trip {
-  constructor(boardContainer, eventsModal) {
+  constructor(boardContainer, eventsModal, filterModel) {
     this._boardContainer = boardContainer;
     this._eventsModal = eventsModal;
+    this._filterModel = filterModel;
 
     this._nowEvent = [];
     this._eventsPresenter = {};
@@ -30,6 +32,7 @@ export default class Trip {
     this._handleModeChange = this._handleModeChange.bind(this);
 
     this._eventsModal.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -43,13 +46,17 @@ export default class Trip {
   }
 
   _getEvents() {
+    const filterType = this._filterModel.getFilter();
+    const events = this._eventsModal.getEvents();
+    const filtredTasks = filter[filterType](events);
+
     switch (this._currentSortType) {
       case sortType.TIME:
-        return this._eventsModal.getEvents().slice().sort(sortCardTime);
+        return filtredTasks.sort(sortCardTime);
       case sortType.PRICE:
-        return this._eventsModal.getEvents().slice().sort(sortCardPrice);
+        return filtredTasks.sort(sortCardPrice);
       default:
-        return this._eventsModal.getEvents().slice();
+        return filtredTasks;
     }
   }
 
