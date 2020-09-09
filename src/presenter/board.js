@@ -1,19 +1,20 @@
-import SortView from '../components/sort';
-import DayView from '../components/days-list';
-import List from '../components/card';
-import NoPoint from '../components/no-point';
+import SortView from '../view/sort';
+import DayView from '../view/day';
+import List from '../view/list';
+import NoPoint from '../view/no-point';
 
-import EventsComponent from '../presenter/event';
+import EventsPresenter from './event';
+import NewEventPresenter from './event-new';
 
 import {render, RenderPosition, sortCardTime, sortCardPrice, remove} from '../utils/render';
 import {getDataList, sortType, UpdateType, UserAction} from '../data';
 import {filter} from "../utils/filter";
 
-export default class Trip {
-  constructor(boardContainer, eventsModal, filterModel) {
+export default class Board {
+  constructor(boardContainer, eventsModal, filterModal) {
     this._boardContainer = boardContainer;
     this._eventsModal = eventsModal;
-    this._filterModel = filterModel;
+    this._filterModel = filterModal;
 
     this._nowEvent = [];
     this._eventsPresenter = {};
@@ -33,6 +34,8 @@ export default class Trip {
 
     this._eventsModal.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
+
+    this._newEventPresenter = new NewEventPresenter(this._boardContainer, this._handleViewAction);
   }
 
   init() {
@@ -43,6 +46,12 @@ export default class Trip {
   update() {
     this._clearTripsBoard();
     this._renderTripsBoard();
+  }
+
+  createTask() {
+    this._currentSortType = sortType.DEFAULT;
+    // this._filterModel.setFilter(UpdateType.MAJOR, filtersProps);
+    this._newEventPresenter.init();
   }
 
   _getEvents() {
@@ -61,6 +70,7 @@ export default class Trip {
   }
 
   _clearTripsBoard({resetSortType = false} = {}) {
+    this._newEventPresenter.destroy();
     Object
       .values(this._eventsPresenter)
       .forEach((presenter) => presenter.destroy());
@@ -75,6 +85,7 @@ export default class Trip {
   }
 
   _handleModeChange() {
+    this._newEventPresenter.destroy();
     Object
       .values(this._eventsPresenter)
       .forEach((presenter) => presenter.resetView());
@@ -118,7 +129,7 @@ export default class Trip {
 
   _renderPoints(events) {
     events.forEach((item) => {
-      const point = new EventsComponent(this._tripList, this._handleViewAction, this._handleModeChange);
+      const point = new EventsPresenter(this._tripList, this._handleViewAction, this._handleModeChange);
       point.init(item);
       this._eventsPresenter[item.id] = point;
       return;
@@ -137,7 +148,7 @@ export default class Trip {
       this._sortComponent = null;
     }
 
-    this._sortComponent = new SortView();
+    this._sortComponent = new SortView(this._currentSortType, sortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
 
     render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
@@ -158,7 +169,7 @@ export default class Trip {
         this._eventsModal.updateEvent(updateType, update);
         break;
       case UserAction.ADD_TASK:
-        this._eventsModel.addEvent(updateType, update);
+        this._eventsModal.addEvent(updateType, update);
         break;
       case UserAction.DELETE_TASK:
         this._eventsModal.deleteEvent(updateType, update);

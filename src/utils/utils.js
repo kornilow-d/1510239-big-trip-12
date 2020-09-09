@@ -30,7 +30,7 @@ export const getRandomArray = (min, max, array) => {
 // Дата в диапазоне от сегодняшнего
 export const getRandomDate = (days) => {
   // console.log(new Date(2020, 8, 5).getTime());
-  return new Date(2020, 8, 5).getTime() + (getRandomInteger(0, (days * 24))) * TIME_IN_MS / 24;
+  return new Date(2020, 8, 8).getTime() + (getRandomInteger(0, (days * 24))) * TIME_IN_MS / 24;
 };
 
 export const escDown = (event) => {
@@ -41,9 +41,7 @@ export const isEventFuture = (start) => {
   if (start === null) {
     return false;
   }
-
   const currentDate = new Date();
-
   return currentDate < start;
 };
 
@@ -51,8 +49,6 @@ export const isEventPast = (start) => {
   if (start === null) {
     return false;
   }
-
   const currentDate = new Date();
-
   return currentDate > start;
 };

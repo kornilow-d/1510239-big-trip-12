@@ -1,5 +1,5 @@
-import Event from '../components/event';
-import EditEvent from "../components/event-edit";
+import EventView from '../view/event';
+import EditEventView from "../view/event-edit";
 import {render, RenderPosition, replace, remove} from '../utils/render';
 import {escDown} from '../utils/utils';
 import {UserAction, UpdateType} from '../data';
@@ -12,7 +12,7 @@ import {
   Mode,
 } from "../data";
 
-export default class Events {
+export default class EventsPresenter {
   constructor(list, changeData, changeMode) {
     this._list = list;
 
@@ -38,8 +38,8 @@ export default class Events {
     const prevEventComponent = this._eventComponent;
     const prevEditEventComponent = this._editEventComponent;
 
-    this._eventComponent = new Event(this._event);
-    this._editEventComponent = new EditEvent(this._event, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS);
+    this._eventComponent = new EventView(this._event);
+    this._editEventComponent = new EditEventView(this._event, TYPES_OF_TRANSFER, TYPES_OF_ACTIVITY, CITIES, OPTIONS);
 
     this._eventComponent.setEditClickHandler(this._handleEditClick);
     this._editEventComponent.setFormSubmitHandler(this._handleFormSubmit);
@@ -100,20 +100,12 @@ export default class Events {
   }
 
   _handleFormSubmit(event) {
-    this._changeData(
-      UserAction.UPDATE_TASK,
-      UpdateType.MINOR,
-      event
-    );
+    this._changeData(UserAction.UPDATE_TASK, UpdateType.MINOR, event);
     this._replaceFormToCard();
   }
 
   _handleDeleteClickHandler(event) {
-    this._changeData(
-      UserAction.DELETE_TASK,
-      UpdateType.MINOR,
-      event
-    );
+    this._changeData(UserAction.DELETE_TASK, UpdateType.MINOR, event);
     this._replaceFormToCard();
   }
 

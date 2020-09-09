@@ -1,4 +1,4 @@
-import FilterView from '../components/filters';
+import FilterView from '../view/filters';
 import {render, RenderPosition, replace, remove} from '../utils/render';
 import {filter} from '../utils/filter';
 import {filtersProps, UpdateType} from '../data';
@@ -41,12 +41,12 @@ export default class Filter {
     this.init();
   }
 
-  _handleFilterTypeChange(filtersProps) {
-    if (this._currentFilter === filtersProps) {
+  _handleFilterTypeChange(filtersProp) {
+    if (this._currentFilter === filtersProp) {
       return;
     }
 
-    this._filterModel.setFilter(UpdateType.MAJOR, filtersProps);
+    this._filterModel.setFilter(UpdateType.MAJOR, filtersProp);
   }
 
   _getFilters() {

@@ -1,7 +1,7 @@
 import App from './presenter/app';
 
-const headComponent = document.querySelector(`.trip-main`);
-const bodyComponent = document.querySelector(`.trip-events`);
+const siteHeaderElement = document.querySelector(`.trip-main`);
+const siteBoardElement = document.querySelector(`.trip-events`);
 
-const app = new App(headComponent, bodyComponent);
+const app = new App(siteHeaderElement, siteBoardElement);
 app.init();

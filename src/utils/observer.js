@@ -12,7 +12,6 @@ export default class Observer {
   }
 
   _notify(event, payload) {
-    console.log(event, payload);
     this._observers.forEach((observer) => {
       return observer(event, payload);
     });
