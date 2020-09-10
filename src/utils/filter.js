@@ -1,8 +1,12 @@
-import {filtersProps} from '../data';
-import {isEventFuture, isEventPast} from '../utils/utils';
+import {FilterType} from "../data.js";
+import moment from "moment";
 
 export const filter = {
-  [filtersProps.ALL]: (events) => events.filter((event) => event),
-  [filtersProps.FUTURE]: (events) => events.filter((event) => isEventFuture(event.start)),
-  [filtersProps.PAST]: (events) => events.filter((event) => isEventPast(event.start)),
+  [FilterType.FUTURE]: (points) => points.filter((point) => {
+    return moment(point.timeStart).isAfter(new Date(), `day`);
+  }),
+  [FilterType.PAST]: (points) => points.filter((point) => {
+    return moment(point.timeStart).isBefore(new Date(), `day`);
+  }),
+  [FilterType.EVERYTHING]: (points) => points.slice()
 };

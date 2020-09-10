@@ -1,16 +1,17 @@
-import AbstractComponent from '../abstract-component';
+import AbstractView from "../view/abstract.js";
 
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
+  BEFOREEND: `beforeend`,
+  AFTEREND: `afterend`
 };
 
 export const render = (container, element, place) => {
-  if (container instanceof AbstractComponent) {
+  if (container instanceof AbstractView) {
     container = container.getElement();
   }
 
-  if (element instanceof AbstractComponent) {
+  if (element instanceof AbstractView) {
     element = element.getElement();
   }
 
@@ -21,25 +22,33 @@ export const render = (container, element, place) => {
     case RenderPosition.BEFOREEND:
       container.append(element);
       break;
+    case RenderPosition.AFTEREND:
+      container.insertAdjacentElement(place, element);
+      break;
   }
+};
+
+export const renderTemplate = (container, template, place) => {
+  if (container instanceof AbstractView) {
+    container = container.getElement();
+  }
+
+  container.insertAdjacentHTML(place, template);
 };
 
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
+
   return newElement.firstChild;
 };
 
-export const renderTemplate = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
-
 export const replace = (newChild, oldChild) => {
-  if (oldChild instanceof AbstractComponent) {
+  if (oldChild instanceof AbstractView) {
     oldChild = oldChild.getElement();
   }
 
-  if (newChild instanceof AbstractComponent) {
+  if (newChild instanceof AbstractView) {
     newChild = newChild.getElement();
   }
 
@@ -53,17 +62,31 @@ export const replace = (newChild, oldChild) => {
 };
 
 export const remove = (component) => {
-  if (!(component instanceof AbstractComponent)) {
+  if (component === null) {
+    return;
+  }
+
+  if (!(component instanceof AbstractView)) {
     throw new Error(`Can remove only components`);
   }
+
   component.getElement().remove();
   component.removeElement();
 };
 
-export const sortCardTime = (cardA, cardB) => {
-  return cardA.start - cardB.start;
-};
 
-export const sortCardPrice = (cardA, cardB) => {
-  return cardA.price - cardB.price;
+export const append = (container, element) => {
+  if (container === null || element === null) {
+    throw new Error(`Can't append unexisting elements`);
+  }
+
+  if (container instanceof AbstractView) {
+    container = container.getElement();
+  }
+
+  if (element instanceof AbstractView) {
+    element = element.getElement();
+  }
+
+  container.append(element);
 };
