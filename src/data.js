@@ -30,16 +30,28 @@ export const menuProps = [
   {title: `Stats`, active: false},
 ];
 
-export const filtersProps = [
-  {title: `Everything`, active: true},
-  {title: `Future`, active: false},
-  {title: `Past`, active: false}
-];
+export const filtersProps = {
+  ALL: `ALL`,
+  FUTURE: `FUTURE`,
+  PAST: `PAST`
+};
 
 export const sortType = {
   DEFAULT: `default`,
   TIME: `time`,
   PRICE: `price`
+};
+
+export const UserAction = {
+  UPDATE_TASK: `UPDATE_TASK`,
+  ADD_TASK: `ADD_TASK`,
+  DELETE_TASK: `DELETE_TASK`,
+};
+
+export const UpdateType = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`,
 };
 
 // Модель данных Event-а

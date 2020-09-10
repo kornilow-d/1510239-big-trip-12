@@ -1,22 +1,24 @@
-import MenuView from '../components/menu';
-import FiltersView from '../components/filters';
-import TripHeaderInfoView from '../components/trip-info';
+import MenuView from '../view/menu';
+import FilterPresenter from '../presenter/filter';
+import TripHeaderInfoView from '../view/trip-info';
 
-import {menuProps, filtersProps, headerProps} from '../data';
+import {menuProps, headerProps} from '../data';
 import {render, RenderPosition} from '../utils/render';
 
 export default class Header {
-  constructor(headerContainer) {
+  constructor(headerContainer, eventsModal, filterModel) {
     this._headerContainer = headerContainer;
+    this._eventModel = eventsModal;
+    this._filterModel = filterModel;
   }
 
   init() {
+
     this._menuComponent = new MenuView(menuProps);
-    this._filterComponent = new FiltersView(filtersProps);
+    this._filterPresenter = new FilterPresenter(this._headerContainer, this._filterModel, this._eventModel).init();
     this._travelPanelComponent = new TripHeaderInfoView(headerProps());
 
     render(this._headerContainer, this._menuComponent.getElement(), RenderPosition.AFTERBEGIN);
-    render(this._headerContainer, this._filterComponent.getElement(), RenderPosition.BEFOREEND);
     render(this._headerContainer, this._travelPanelComponent.getElement(), RenderPosition.AFTERBEGIN);
   }
 }
