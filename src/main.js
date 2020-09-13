@@ -12,10 +12,10 @@ import {FilterType, MenuItem} from "./data.js";
 const POINTS_COUNT = 3;
 
 const headerNode = document.querySelector(`.trip-main`);
-const menuHeaderNode = headerNode.querySelectorAll(`.trip-controls h2`)[0];
-const filtersHeaderNode = headerNode.querySelectorAll(`.trip-controls h2`)[1];
+const menuHeaderNode = headerNode.querySelector(`.mjs-menu-header`);
+const filtersHeaderNode = headerNode.querySelector(`.mjs-filter-header`);
 const boardContainerNode = document.querySelector(`.trip-events`);
-const newPointButton = headerNode.querySelector(`.trip-main__event-add-btn`);
+const newPointButtonNode = headerNode.querySelector(`.trip-main__event-add-btn`);
 
 const newPointButtonClickHandler = (evt) => {
   evt.preventDefault();
@@ -24,7 +24,7 @@ const newPointButtonClickHandler = (evt) => {
 };
 
 const newPointFormCloseHandler = () => {
-  newPointButton.disabled = false;
+  newPointButtonNode.disabled = false;
 };
 
 const handleMenuClick = (menuItem) => {
@@ -35,7 +35,7 @@ const handleMenuClick = (menuItem) => {
       filtersModel.setFilter(FilterType.EVERYTHING);
       tripPresenter.init();
       tripPresenter.createPoint(newPointFormCloseHandler);
-      newPointButton.disabled = true;
+      newPointButtonNode.disabled = true;
       break;
     case MenuItem.TABLE:
       statisticsPresenter.destroy();
@@ -55,9 +55,9 @@ const siteMenuComponent = new MenuView();
 pointsModel.setPoints(points);
 
 render(
-    menuHeaderNode,
-    siteMenuComponent,
-    RenderPosition.AFTEREND
+  menuHeaderNode,
+  siteMenuComponent,
+  RenderPosition.AFTEREND
 );
 
 const filtersPreseter = new FiltersPreseter(filtersHeaderNode, pointsModel, filtersModel);
@@ -65,7 +65,7 @@ const tripPresenter = new TripPresenter(boardContainerNode, pointsModel, filters
 const informationPresenter = new InformationPresenter(headerNode, pointsModel, filtersModel);
 const statisticsPresenter = new StatisticsPresenter(boardContainerNode, pointsModel);
 
-newPointButton.addEventListener(`click`, newPointButtonClickHandler);
+newPointButtonNode.addEventListener(`click`, newPointButtonClickHandler);
 siteMenuComponent.setMenuItemClickHandler(handleMenuClick);
 
 informationPresenter.init();

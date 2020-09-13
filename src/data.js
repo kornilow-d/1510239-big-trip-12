@@ -1,5 +1,10 @@
 export const DESTINATION_LIMIT = 5;
 
+export const PointCategory = {
+  TRANSFER: `Transfer`,
+  ACTIVITY: `Activity`
+};
+
 export const POINTS_TYPE = new Map([
   [`Transfer`, [
     `Taxi`,
@@ -16,7 +21,7 @@ export const POINTS_TYPE = new Map([
     `Restaurant`
   ]]
 ]);
-window.test = POINTS_TYPE;
+
 export const CITIES = [
   `Amsterdam`,
   `Geneva`,
