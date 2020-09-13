@@ -84,21 +84,21 @@ export default class StatisticsView extends AbstractView {
     timeSpendCtx.height = ChartProperty.BAR_HEIGHT;
 
     this._moneyChart = this._renderChart(
-      moneyCtx,
-      ChartType.MONEY,
-      ((val) => `€ ${val}`)
+        moneyCtx,
+        ChartType.MONEY,
+        ((val) => `€ ${val}`)
     );
 
     this._transportChart = this._renderChart(
-      transportCtx,
-      ChartType.TRANSPORT,
-      (val) => `${val}x`
+        transportCtx,
+        ChartType.TRANSPORT,
+        (val) => `${val}x`
     );
 
     this._timeSpendChart = this._renderChart(
-      timeSpendCtx,
-      ChartType.TIME_SPENT,
-      (val) => `${getHumanizeTimeInterval(val)}`
+        timeSpendCtx,
+        ChartType.TIME_SPENT,
+        (val) => `${getHumanizeTimeInterval(val)}`
     );
   }
 
@@ -171,9 +171,9 @@ export default class StatisticsView extends AbstractView {
 
   _createData(points) {
     return Object.assign({},
-      this._getMoneyChartData(points),
-      this._getTransportChartData(points),
-      this._getTimeSpentChartData(points)
+        this._getMoneyChartData(points),
+        this._getTransportChartData(points),
+        this._getTimeSpentChartData(points)
     );
   }
 
@@ -198,10 +198,8 @@ export default class StatisticsView extends AbstractView {
     points.forEach((point) => {
       if (pointsTransport[point.type]) {
         pointsTransport[point.type]++;
-      } else {
-        if (transportTypes.includes(point.type)) {
-          pointsTransport[point.type] = 1;
-        }
+      } else if (transportTypes.includes(point.type)) {
+        pointsTransport[point.type] = 1;
       }
     });
 
