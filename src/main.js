@@ -3,19 +3,19 @@ import TripPresenter from "./presenter/trip.js";
 import FiltersPreseter from "./presenter/filters.js";
 import InformationPresenter from "./presenter/information.js";
 import StatisticsPresenter from "./presenter/statistics.js";
+import OffersModel from "./model/offers.js";
 import PointsModel from "./model/points.js";
 import FiltersModel from "./model/filters.js";
-import {generatePoints} from "./mock/point.js";
 import {render, RenderPosition} from "./utils/render.js";
-import {FilterType, MenuItem} from "./data.js";
-
-const POINTS_COUNT = 3;
+import {FilterType, MenuItem, AUTHORIZATION, END_POINT} from "./data.js";
+import Api from "./api.js";
 
 const headerNode = document.querySelector(`.trip-main`);
 const menuHeaderNode = headerNode.querySelector(`.mjs-menu-header`);
 const filtersHeaderNode = headerNode.querySelector(`.mjs-filter-header`);
 const boardContainerNode = document.querySelector(`.trip-events`);
-const newPointButtonNode = headerNode.querySelector(`.trip-main__event-add-btn`);
+const tripHeader = boardContainerNode.querySelector(`h2`);
+const newPointButton = headerNode.querySelector(`.trip-main__event-add-btn`);
 
 const newPointButtonClickHandler = (evt) => {
   evt.preventDefault();
@@ -24,7 +24,7 @@ const newPointButtonClickHandler = (evt) => {
 };
 
 const newPointFormCloseHandler = () => {
-  newPointButtonNode.disabled = false;
+  newPointButton.disabled = false;
 };
 
 const handleMenuClick = (menuItem) => {
@@ -35,7 +35,7 @@ const handleMenuClick = (menuItem) => {
       filtersModel.setFilter(FilterType.EVERYTHING);
       tripPresenter.init();
       tripPresenter.createPoint(newPointFormCloseHandler);
-      newPointButtonNode.disabled = true;
+      newPointButton.disabled = true;
       break;
     case MenuItem.TABLE:
       statisticsPresenter.destroy();
@@ -47,27 +47,64 @@ const handleMenuClick = (menuItem) => {
   }
 };
 
-const points = new Array(POINTS_COUNT).fill().map(generatePoints);
-const pointsModel = new PointsModel();
+const enableMenu = () => {
+  render(
+      menuHeaderNode,
+      siteMenuComponent,
+      RenderPosition.AFTEREND
+  );
+
+  siteMenuComponent.setMenuItemClickHandler(handleMenuClick);
+  newPointButton.addEventListener(`click`, newPointButtonClickHandler);
+  newPointButton.disabled = false;
+};
+
+const api = new Api(END_POINT, AUTHORIZATION);
+const offersModel = new OffersModel();
+const pointsModel = new PointsModel(offersModel);
 const filtersModel = new FiltersModel();
 const siteMenuComponent = new MenuView();
-
-pointsModel.setPoints(points);
-
-render(
-  menuHeaderNode,
-  siteMenuComponent,
-  RenderPosition.AFTEREND
+const filtersPreseter = new FiltersPreseter(
+    filtersHeaderNode,
+    pointsModel,
+    filtersModel
+);
+const tripPresenter = new TripPresenter(
+    boardContainerNode,
+    tripHeader,
+    pointsModel,
+    offersModel,
+    filtersModel,
+    api
+);
+const informationPresenter = new InformationPresenter(
+    headerNode,
+    pointsModel,
+    filtersModel
+);
+const statisticsPresenter = new StatisticsPresenter(
+    boardContainerNode,
+    pointsModel
 );
 
-const filtersPreseter = new FiltersPreseter(filtersHeaderNode, pointsModel, filtersModel);
-const tripPresenter = new TripPresenter(boardContainerNode, pointsModel, filtersModel);
-const informationPresenter = new InformationPresenter(headerNode, pointsModel, filtersModel);
-const statisticsPresenter = new StatisticsPresenter(boardContainerNode, pointsModel);
-
-newPointButtonNode.addEventListener(`click`, newPointButtonClickHandler);
-siteMenuComponent.setMenuItemClickHandler(handleMenuClick);
+newPointButton.disabled = true;
 
 informationPresenter.init();
 tripPresenter.init();
 filtersPreseter.init();
+
+Promise.all([
+  api.getOffers(),
+  api.getDestinations(),
+  api.getPoints(),
+])
+  .then(([offers, destinations, points]) => {
+    offersModel.setOffersFromServer(offers);
+    pointsModel.setDestinations(destinations);
+    pointsModel.setPoints(points);
+    enableMenu();
+  })
+  .catch(() => {
+    pointsModel.setPoints([]);
+    enableMenu();
+  });
