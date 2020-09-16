@@ -10,12 +10,12 @@ export default class Api {
   }
 
   getPoints() {
-    return this._load({url: `points`})
+    return this._request({url: `points`})
       .then(Api.toJSON);
   }
 
   updatePoint(point) {
-    return this._load(
+    return this._request(
         {
           url: `points/${point.id}`,
           method: Method.PUT,
@@ -27,16 +27,16 @@ export default class Api {
   }
 
   getDestinations() {
-    return this._load({url: `destinations`})
+    return this._request({url: `destinations`})
       .then(Api.toJSON);
   }
 
   getOffers() {
-    return this._load({url: `offers`})
+    return this._request({url: `offers`})
     .then(Api.toJSON);
   }
 
-  _load({url, method = Method.GET, body = null, headers = new Headers()}) {
+  _request({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})

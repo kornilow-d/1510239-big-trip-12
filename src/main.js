@@ -7,11 +7,8 @@ import OffersModel from "./model/offers.js";
 import PointsModel from "./model/points.js";
 import FiltersModel from "./model/filters.js";
 import {render, RenderPosition} from "./utils/render.js";
-import {FilterType, MenuItem} from "./data.js";
+import {FilterType, MenuItem, AUTHORIZATION, END_POINT} from "./data.js";
 import Api from "./api.js";
-
-const AUTHORIZATION = `Basic eo0w590ik29889a`;
-const END_POINT = `https://12.ecmascript.pages.academy/big-trip/`;
 
 const headerNode = document.querySelector(`.trip-main`);
 const menuHeaderNode = headerNode.querySelector(`.mjs-menu-header`);
