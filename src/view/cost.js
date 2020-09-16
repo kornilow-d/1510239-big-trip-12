@@ -25,7 +25,6 @@ export default class CostView extends AbstractView {
 
       if (point.offers) {
         totalTripCost = point.offers.reduce((acc, item) => {
-          console.log(acc);
           if (item.checked) {
             return acc += item.price;
           }
