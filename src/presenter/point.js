@@ -44,9 +44,9 @@ export default class PointPresenter {
     this._pointComponent = new PointView(this._offersModel.getOffers(), point);
     
     this._pointEditComponent = new PointEditView(
-        this._pointsModel.getDestinations(),
-        this._offersModel.getOffers(),
-        point
+      this._pointsModel.getDestinations(),
+      this._offersModel.getOffers(),
+      point
     );
 
     this._pointComponent.setEditClickHandler(this._editClickHandler);
