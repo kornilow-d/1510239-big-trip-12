@@ -1,6 +1,10 @@
+import PointsModel from "./model/points.js";
+
 const Method = {
   GET: `GET`,
-  PUT: `PUT`
+  PUT: `PUT`,
+  POST: `POST`,
+  DELETE: `DELETE`
 };
 
 export default class Api {
@@ -10,33 +14,57 @@ export default class Api {
   }
 
   getPoints() {
-    return this._request({url: `points`})
-      .then(Api.toJSON);
+    return this._load({url: `points`})
+      .then(Api.toJSON)
+      .then((serverPoints) => serverPoints.map(PointsModel.adaptToClient));
   }
 
   updatePoint(point) {
-    return this._request(
+    return this._load(
         {
           url: `points/${point.id}`,
           method: Method.PUT,
-          body: JSON.stringify(point),
+          body: JSON.stringify(PointsModel.adaptToServer(point)),
           headers: new Headers({"Content-Type": `application/json`})
         }
     )
-    .then(Api.toJSON);
+      .then(Api.toJSON)
+      .then(PointsModel.adaptToClient);
+  }
+
+  addPoint(point) {
+    return this._load(
+        {
+          url: `points`,
+          method: Method.POST,
+          body: JSON.stringify(PointsModel.adaptToServer(point)),
+          headers: new Headers({"Content-Type": `application/json`})
+        }
+    )
+    .then(Api.toJSON)
+    .then(PointsModel.adaptToClient);
+  }
+
+  deletePoint(point) {
+    return this._load(
+        {
+          url: `points/${point.id}`,
+          method: Method.DELETE,
+        }
+    );
   }
 
   getDestinations() {
-    return this._request({url: `destinations`})
+    return this._load({url: `destinations`})
       .then(Api.toJSON);
   }
 
   getOffers() {
-    return this._request({url: `offers`})
-    .then(Api.toJSON);
+    return this._load({url: `offers`})
+      .then(Api.toJSON);
   }
 
-  _request({url, method = Method.GET, body = null, headers = new Headers()}) {
+  _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
