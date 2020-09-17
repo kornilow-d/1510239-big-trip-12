@@ -42,12 +42,7 @@ export default class PointPresenter {
     const prevPointEditComponent = this._pointEditComponent;
 
     this._pointComponent = new PointView(this._offersModel.getOffers(), point);
-    
-    this._pointEditComponent = new PointEditView(
-      this._pointsModel.getDestinations(),
-      this._offersModel.getOffers(),
-      point
-    );
+    this._pointEditComponent = new PointEditView(this._pointsModel.getDestinations(), this._offersModel.getOffers(), point);
 
     this._pointComponent.setEditClickHandler(this._editClickHandler);
     this._pointEditComponent.setFormSubmitHandler(this._formSubmitHandler);
