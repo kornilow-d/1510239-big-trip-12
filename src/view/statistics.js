@@ -199,7 +199,7 @@ export default class StatisticsView extends AbstractView {
       if (pointsTransport[point.type]) {
         pointsTransport[point.type]++;
       } else if (transportTypes.includes(point.type)) {
-          pointsTransport[point.type] = 1;
+        pointsTransport[point.type] = 1;
       }
     });
 
