@@ -3,7 +3,7 @@ export const PointCategory = {
   ACTIVITY: `Activity`
 };
 
-export const POINTS_TYPE = new Map([
+export const POINT_TYPES = new Map([
   [PointCategory.TRANSFER, [
     `Taxi`,
     `Bus`,
@@ -71,3 +71,12 @@ export const ChartType = {
 
 export const AUTHORIZATION = `Basic eo0w590ik29889a`;
 export const END_POINT = `https://12.ecmascript.pages.academy/big-trip/`;
+
+export const SHAKE_ANIMATION_TIMEOUT = 600;
+export const MS_COUNT = 1000;
+
+export const State = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`,
+  ABORTING: `ABORTING`
+};

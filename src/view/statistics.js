@@ -1,7 +1,7 @@
 import AbstractView from "./abstract.js";
 import {getHumanizeTimeInterval} from "../utils/date.js";
 import {getTimeInterval} from "../utils/common.js";
-import {TypeEmoji, POINTS_TYPE, ChartType, PointCategory} from "../data.js";
+import {TypeEmoji, POINT_TYPES, ChartType, PointCategory} from "../data.js";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
@@ -192,7 +192,7 @@ export default class StatisticsView extends AbstractView {
   }
 
   _getTransportChartData(points) {
-    const transportTypes = POINTS_TYPE.get(PointCategory.TRANSFER);
+    const transportTypes = POINT_TYPES.get(PointCategory.TRANSFER);
     const pointsTransport = {};
 
     points.forEach((point) => {
@@ -222,12 +222,12 @@ export default class StatisticsView extends AbstractView {
 
   _getFormattedStructure(items, name) {
     return [...Object.entries(items)]
-      .sort((a, b) => b[1] - a[1])
-      .reduce((result, [key, value]) => {
-        result[name].labels.push(`${TypeEmoji.get(key)} ${key.toUpperCase()}`);
-        result[name].data.push(value);
+    .sort((a, b) => b[1] - a[1])
+    .reduce((result, [key, value]) => {
+      result[name].labels.push(`${TypeEmoji.get(key)} ${key.toUpperCase()}`);
+      result[name].data.push(value);
 
-        return result;
-      }, {[name]: {labels: [], data: []}});
+      return result;
+    }, {[name]: {labels: [], data: []}});
   }
 }
