@@ -1,3 +1,14 @@
+export const AUTHORIZATION = `Basic eo0w590ik29889a`;
+export const API_URL = `https://12.ecmascript.pages.academy/big-trip/`;
+export const STORE_PREFIX = `bigtrip-localstorage`;
+export const STORE_VER = `v12`;
+export const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+export const OFFLINE_TITLE = ` [offline]`;
+export const SERVICE_WORKER_ERROR_MESSAGE = `ServiceWorker isn't available`;
+
+export const SHAKE_ANIMATION_TIMEOUT = 600;
+export const MILISECONDS_NUMBER = 1000;
+
 export const PointCategory = {
   TRANSFER: `Transfer`,
   ACTIVITY: `Activity`
@@ -68,12 +79,6 @@ export const ChartType = {
   TRANSPORT: `TRANSPORT`,
   TIME_SPENT: `TIME SPENT`,
 };
-
-export const AUTHORIZATION = `Basic eo0w590ik29889a`;
-export const END_POINT = `https://12.ecmascript.pages.academy/big-trip/`;
-
-export const SHAKE_ANIMATION_TIMEOUT = 600;
-export const MS_COUNT = 1000;
 
 export const State = {
   SAVING: `SAVING`,

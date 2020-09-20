@@ -7,8 +7,12 @@ import OffersModel from "./model/offers.js";
 import PointsModel from "./model/points.js";
 import FiltersModel from "./model/filters.js";
 import {render, RenderPosition} from "./utils/render.js";
-import {FilterType, MenuItem, AUTHORIZATION, END_POINT} from "./data.js";
-import Api from "./api.js";
+import {FilterType, MenuItem} from "./const.js";
+
+import {AUTHORIZATION, API_URL, STORE_NAME, OFFLINE_TITLE, SERVICE_WORKER_ERROR_MESSAGE} from "./const.js";
+import Api from "./api/index.js";
+import Store from "./api/store.js";
+import Provider from "./api/provider.js";
 
 const headerNode = document.querySelector(`.trip-main`);
 const menuHeaderNode = headerNode.querySelector(`.mjs-menu-header`);
@@ -63,7 +67,10 @@ const enableMenu = () => {
   newPointButton.disabled = false;
 };
 
-const api = new Api(END_POINT, AUTHORIZATION);
+const api = new Api(API_URL, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
+
 const offersModel = new OffersModel();
 const pointsModel = new PointsModel();
 const filtersModel = new FiltersModel();
@@ -79,7 +86,7 @@ const tripPresenter = new TripPresenter(
     pointsModel,
     offersModel,
     filtersModel,
-    api
+    apiWithProvider
 );
 const informationPresenter = new InformationPresenter(
     headerNode,
@@ -98,9 +105,9 @@ tripPresenter.init();
 filtersPresenter.init();
 
 Promise.all([
-  api.getOffers(),
-  api.getDestinations(),
-  api.getPoints(),
+  apiWithProvider.getOffers(),
+  apiWithProvider.getDestinations(),
+  apiWithProvider.getPoints(),
 ])
   .then(([offers, destinations, points]) => {
     offersModel.setOffersFromServer(offers);
@@ -111,4 +118,20 @@ Promise.all([
 .catch(() => {
   pointsModel.setPoints([]);
   enableMenu();
+});
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+    .catch(() => {
+      console.warn(SERVICE_WORKER_ERROR_MESSAGE); // eslint-disable-line
+    });
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(OFFLINE_TITLE, ``);
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += OFFLINE_TITLE;
 });
