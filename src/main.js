@@ -122,9 +122,9 @@ Promise.all([
 
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`)
-    // .catch(() => {
-    //   console.warn(SERVICE_WORKER_ERROR_MESSAGE); // eslint-disable-line
-    // });
+    .catch(() => {
+      window.console.log(SERVICE_WORKER_ERROR_MESSAGE); // eslint-disable-line
+    });
 });
 
 window.addEventListener(`online`, () => {
