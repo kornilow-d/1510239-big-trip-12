@@ -33,7 +33,7 @@ const FLATPICKR_PROPERTIES = {
   },
 };
 
-const CLASS_NODE = {
+const CLASS_ELEMENT = {
   CITY: `event__field-group--destination`,
   PRICE: `event__input--price`,
 };
@@ -142,7 +142,7 @@ export default class PointEditView extends AbstractSmartView {
             &euro;
           </label>
           <input
-            class="event__input ${CLASS_NODE.PRICE}"
+            class="event__input ${CLASS_ELEMENT.PRICE}"
             id="event-price-1"
             type="number"
             name="event-price"
@@ -247,9 +247,9 @@ export default class PointEditView extends AbstractSmartView {
   _setInnerHandlers() {
     this.getElement().querySelector(`.event__type-list`)
       .addEventListener(`click`, this._pointTypeChangeHandler);
-    this.getElement().querySelector(`.${CLASS_NODE.CITY}`)
+    this.getElement().querySelector(`.${CLASS_ELEMENT.CITY}`)
       .addEventListener(`change`, this._pointCityChangeHandler);
-    this.getElement().querySelector(`.${CLASS_NODE.PRICE}`)
+    this.getElement().querySelector(`.${CLASS_ELEMENT.PRICE}`)
       .addEventListener(`change`, this._pointPriceChangeHandler);
 
     if (this._offersByType.get(this._data.type)
@@ -398,7 +398,7 @@ export default class PointEditView extends AbstractSmartView {
     const {type, city, isDisabled} = this._data;
 
     return (
-      `<div class="event__field-group ${CLASS_NODE.CITY}">
+      `<div class="event__field-group ${CLASS_ELEMENT.CITY}">
         <label class="event__label event__type-output" for="event-destination-1">
           ${generatePointLabel(type)}
         </label>
@@ -458,35 +458,35 @@ export default class PointEditView extends AbstractSmartView {
   }
 
   _checkCityValidity() {
-    const cityNode = this.getElement().querySelector(`.${CLASS_NODE.CITY} input`);
+    const cityElement = this.getElement().querySelector(`.${CLASS_ELEMENT.CITY} input`);
     let cityMessage = ``;
     let validity = true;
 
-    if (cityNode.value.length === 0) {
+    if (cityElement.value.length === 0) {
       cityMessage = `Не указан пункт назначения`;
       validity = false;
     } else if (this._destinations.size
-      && ![...this._destinations.keys()].includes(cityNode.value)) {
+      && ![...this._destinations.keys()].includes(cityElement.value)) {
       cityMessage = `Выбранный пункт назначения отсутсвует в предложенном списке`;
       validity = false;
     }
 
-    cityNode.setCustomValidity(cityMessage);
+    cityElement.setCustomValidity(cityMessage);
 
     return validity;
   }
 
   _checkPriceValidity() {
-    const priceNode = this.getElement().querySelector(`.${CLASS_NODE.PRICE}`);
+    const priceElement = this.getElement().querySelector(`.${CLASS_ELEMENT.PRICE}`);
     let priceMessage = ``;
     let validity = true;
 
-    if (!(parseInt(priceNode.value, 10))) {
+    if (!(parseInt(priceElement.value, 10))) {
       priceMessage = `Стоимость должны быть больше ноля`;
       validity = false;
     }
 
-    priceNode.setCustomValidity(priceMessage);
+    priceElement.setCustomValidity(priceMessage);
 
     return validity;
   }

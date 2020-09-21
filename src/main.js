@@ -14,12 +14,12 @@ import Api from "./api/index.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
 
-const headerNode = document.querySelector(`.trip-main`);
-const menuHeaderNode = headerNode.querySelector(`.mjs-menu-header`);
-const filtersHeaderNode = headerNode.querySelector(`.mjs-filter-header`);
-const boardContainerNode = document.querySelector(`.trip-events`);
-const tripHeader = boardContainerNode.querySelector(`h2`);
-const newPointButton = headerNode.querySelector(`.trip-main__event-add-btn`);
+const headerElement = document.querySelector(`.trip-main`);
+const menuHeaderElement = headerElement.querySelector(`.mjs-menu-header`);
+const filtersHeaderElement = headerElement.querySelector(`.mjs-filter-header`);
+const boardContainerElement = document.querySelector(`.trip-events`);
+const tripHeader = boardContainerElement.querySelector(`h2`);
+const newPointButton = headerElement.querySelector(`.trip-main__event-add-btn`);
 
 const newPointButtonClickHandler = (evt) => {
   evt.preventDefault();
@@ -57,7 +57,7 @@ const handleMenuClick = (menuItem) => {
 
 const enableMenu = () => {
   render(
-      menuHeaderNode,
+      menuHeaderElement,
       siteMenuComponent,
       RenderPosition.AFTEREND
   );
@@ -76,12 +76,12 @@ const pointsModel = new PointsModel();
 const filtersModel = new FiltersModel();
 const siteMenuComponent = new MenuView();
 const filtersPresenter = new FiltersPresenter(
-    filtersHeaderNode,
+    filtersHeaderElement,
     pointsModel,
     filtersModel
 );
 const tripPresenter = new TripPresenter(
-    boardContainerNode,
+    boardContainerElement,
     tripHeader,
     pointsModel,
     offersModel,
@@ -89,12 +89,12 @@ const tripPresenter = new TripPresenter(
     apiWithProvider
 );
 const informationPresenter = new InformationPresenter(
-    headerNode,
+    headerElement,
     pointsModel,
     filtersModel
 );
 const statisticsPresenter = new StatisticsPresenter(
-    boardContainerNode,
+    boardContainerElement,
     pointsModel
 );
 
